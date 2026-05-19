@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>18b — Full Catalog Taxonomy + Column 3</title>
+  <link rel="stylesheet" href="https://use.typekit.net/gpz5ale.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <style>
+    :root {
+      --sh-dark-brown:#331811; --sh-mid-brown:#603423; --sh-tan:#B7804E;
+      --sh-lt1:#F8F5F3; --sh-lt2:#F0ECE8; --sh-lt3:#ECDED1;
+      --sh-white:#FFFFFF; --sh-blue:#07729C;
+      --sh-off:#F4F4F4; --sh-black:#1E1E1E; --sh-dg:#343434;
+      --sh-mg:#757575; --sh-border:#DCDCDC;
+      --sh-font:'interstate','Roboto',Arial,sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--sh-font);background:var(--sh-lt1);color:var(--sh-dg);font-size:14px;}
+
+    /* ── TOP NAV ── */
+    .top-nav{background:var(--sh-dark-brown);height:40px;display:flex;align-items:center;padding:0 24px;gap:0;}
+    .nav-logo{color:white;font-size:13px;font-weight:700;letter-spacing:.04em;margin-right:20px;}
+    .nav-logo span{color:var(--sh-tan);}
+    .nav-cats{display:flex;gap:0;}
+    .nav-cat{color:rgba(255,255,255,.7);font-size:12px;padding:0 12px;height:40px;display:flex;align-items:center;cursor:pointer;border-bottom:2px solid transparent;}
+    .nav-cat.active{color:white;font-weight:700;border-bottom-color:var(--sh-tan);}
+
+    /* ── DOC HEADER ── */
+    .doc-header{background:var(--sh-dark-brown);padding:14px 32px 18px;border-bottom:3px solid var(--sh-tan);}
+    .doc-header h1{color:white;font-size:17px;font-weight:700;}
+    .doc-header p{color:rgba(255,255,255,.6);font-size:11px;margin-top:3px;}
+
+    /* ── CONTROLS ── */
+    .controls{background:var(--sh-white);border-bottom:1px solid var(--sh-border);padding:10px 32px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+    .ctrl-label{font-size:10px;font-weight:700;color:var(--sh-mg);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+    .dept-btns,.level-btns{display:flex;gap:3px;flex-wrap:wrap;}
+    .dept-btn{background:var(--sh-lt1);border:1px solid var(--sh-border);padding:4px 11px;font-family:var(--sh-font);font-size:11px;font-weight:700;color:var(--sh-dg);cursor:pointer;}
+    .dept-btn:hover{background:var(--sh-lt2);}
+    .dept-btn.active{background:var(--sh-dark-brown);color:white;border-color:var(--sh-dark-brown);}
+    .level-btns{gap:0;}
+    .level-btn{background:var(--sh-lt1);border:1px solid var(--sh-border);padding:4px 14px;font-family:var(--sh-font);font-size:11px;font-weight:700;color:var(--sh-dg);cursor:pointer;margin-left:-1px;position:relative;}
+    .level-btn:hover{background:var(--sh-lt2);z-index:1;}
+    .level-btn.active{background:var(--sh-blue);color:white;border-color:var(--sh-blue);z-index:2;}
+    .sep{width:1px;height:24px;background:var(--sh-border);flex-shrink:0;}
+    .auth-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sh-mg);margin-left:auto;}
+    .auth-toggle label{cursor:pointer;display:flex;align-items:center;gap:5px;}
+    .toggle-track{width:30px;height:16px;background:var(--sh-border);position:relative;cursor:pointer;}
+    .toggle-track.on{background:var(--sh-blue);}
+    .toggle-knob{position:absolute;top:2px;left:2px;width:12px;height:12px;background:white;transition:left .15s;}
+    .toggle-track.on .toggle-knob{left:16px;}
+
+    /* ── LEGEND ── */
+    .legend{background:var(--sh-lt2);border-bottom:1px solid var(--sh-border);padding:6px 32px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+    .leg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--sh-dg);}
+    .ld{width:9px;height:9px;flex-shrink:0;}
+    .ld.normal{background:var(--sh-white);border:1px solid var(--sh-border);}
+    .ld.reordered{background:#FFF3E0;border:1px solid #F59E0B;}
+    .ld.new-item{background:#E8F5E9;border:1px solid #4CAF50;}
+    .ld.relabeled{background:#E3F2FD;border:1px solid var(--sh-blue);}
+    .ld.crosslink{background:var(--sh-off);border:1px dashed var(--sh-border);}
+    .ld.removed{background:#FFEBEE;border:1px solid #EF9A9A;}
+
+    /* ── MEGA PANEL WRAPPER ── */
+    .panel-wrap{padding:20px 32px;}
+    .mega-panel{display:flex;background:var(--sh-white);border:1px solid var(--sh-border);box-shadow:0 4px 16px rgba(0,0,0,.08);min-height:500px;}
+
+    /* ── COLUMN 1 ── */
+    .col1{width:156px;flex-shrink:0;border-right:1px solid var(--sh-border);}
+    .col-head{background:var(--sh-lt1);padding:8px 12px;font-size:10px;font-weight:700;color:var(--sh-mg);text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--sh-border);}
+    .c1-item{padding:9px 12px;font-size:13px;color:var(--sh-blue);border-bottom:1px solid var(--sh-off);cursor:pointer;}
+    .c1-item:hover{background:var(--sh-lt1);}
+    .c1-item.active{background:var(--sh-lt2);color:var(--sh-dg);font-weight:700;border-left:3px solid var(--sh-tan);padding-left:9px;}
+
+    /* ── COLUMN 2 ── */
+    .col2{width:270px;flex-shrink:0;border-right:1px solid var(--sh-border);transition:width .15s;}
+
+    /* L1: 2-column grid */
+    .c2-grid{display:grid;grid-template-columns:1fr 1fr;}
+    .c2-item{padding:7px 10px;font-size:12px;color:var(--sh-dg);display:flex;align-items:center;gap:5px;cursor:pointer;border-bottom:1px solid var(--sh-off);overflow:hidden;}
+    .c2-item:hover{background:var(--sh-lt1);}
+    .c2-item.active{background:var(--sh-lt2);font-weight:700;border-left:3px solid var(--sh-blue);padding-left:7px;}
+    .c2-item.reordered{background:#FFF3E0;}
+    .c2-item.reordered.active{background:#FFE0B2;}
+    .c2-item.new-item{background:#E8F5E9;}
+    .c2-item.new-item.active{background:#C8E6C9;}
+    .c2-item.relabeled{background:#E3F2FD;}
+    .c2-item.relabeled.active{background:#BBDEFB;}
+    .c2-item.crosslink{background:var(--sh-off);color:var(--sh-mg);font-style:italic;font-size:11px;}
+    .c2-item.removed{background:#FFEBEE;color:#aaa;text-decoration:line-through;font-size:11px;cursor:default;}
+    .c2-item-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;}
+    .c2-tag{font-size:8px;font-weight:700;padding:1px 3px;text-transform:uppercase;flex-shrink:0;}
+    .c2-tag.new-item{background:#4CAF50;color:white;}
+    .c2-tag.relabeled{background:var(--sh-blue);color:white;}
+    .c2-tag.reordered{background:#F59E0B;color:white;}
+    .c2-vol{font-size:10px;color:var(--sh-mg);white-space:nowrap;flex-shrink:0;display:none;}
+
+    /* L2/L3: inline group header (static label) */
+    .c2-group-header{padding:6px 12px 4px;font-size:10px;font-weight:700;color:var(--sh-mg);text-transform:uppercase;letter-spacing:.07em;background:var(--sh-lt1);border-top:1px solid var(--sh-border);}
+
+    /* Group block — break-inside:avoid keeps header + items together in CSS columns */
+    .c2-group-block{break-inside:avoid;-webkit-column-break-inside:avoid;}
+
+    /* 1-column grouped */
+    .c2-groups-1col .c2-group-block:first-child .c2-group-header{border-top:none;}
+
+    /* 2-column grouped: CSS columns, groups tile left→right without splitting */
+    .c2-groups-2col{column-count:2;column-gap:0;}
+    .c2-groups-2col .c2-item{border-right:none;}
+
+    .c2-xlink-footer{padding:8px 12px;font-size:11px;color:var(--sh-mg);border-top:1px dashed var(--sh-border);margin-top:4px;line-height:1.8;}
+    .c2-xlink-footer span{color:var(--sh-blue);cursor:pointer;display:block;}
+    .c2-note{padding:8px 12px;font-size:10px;color:var(--sh-mg);background:var(--sh-lt3);border-top:1px solid var(--sh-border);line-height:1.5;}
+    .c2-note strong{color:var(--sh-dark-brown);display:block;margin-bottom:2px;}
+
+    /* ── COLUMN 3 ── */
+    .col3{flex:1;min-width:0;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+    .c3-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid var(--sh-border);}
+    .c3-context{font-size:11px;font-weight:700;color:var(--sh-dark-brown);}
+    .c3-context span{color:var(--sh-mg);font-weight:400;}
+    .c3-auth{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--sh-mg);}
+    .auth-pill{padding:2px 8px;font-size:10px;font-weight:700;border:1px solid var(--sh-border);cursor:pointer;color:var(--sh-mg);}
+    .auth-pill.on{background:var(--sh-blue);color:white;border-color:var(--sh-blue);}
+
+    /* Brand chips */
+    .c3-section-label{font-size:10px;font-weight:700;color:var(--sh-mg);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;}
+    .chip-row{display:flex;flex-wrap:wrap;gap:5px;}
+    .brand-chip{padding:4px 10px;border:1px solid var(--sh-border);background:var(--sh-white);font-size:11px;font-weight:700;color:var(--sh-dg);cursor:pointer;}
+    .brand-chip:hover{background:var(--sh-lt2);border-color:var(--sh-tan);}
+    .filter-chip{padding:3px 9px;border:1px solid var(--sh-border);background:var(--sh-lt1);font-size:11px;color:var(--sh-dg);cursor:pointer;}
+    .filter-chip:hover{background:var(--sh-lt2);}
+
+    /* View All CTA */
+    .view-all-cta{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--sh-lt1);border:1px solid var(--sh-border);font-size:12px;font-weight:700;color:var(--sh-blue);cursor:pointer;text-decoration:none;width:fit-content;}
+    .view-all-cta:hover{background:var(--sh-lt2);}
+    .view-all-cta span{font-size:14px;}
+
+    /* Personal rail */
+    .c3-personal{border-top:1px solid var(--sh-border);padding-top:12px;}
+    .c3-products{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+    .prod-tile{border:1px solid var(--sh-border);padding:8px;cursor:pointer;}
+    .prod-tile:hover{border-color:var(--sh-blue);}
+    .prod-thumb{width:100%;aspect-ratio:1;background:var(--sh-lt2);margin-bottom:6px;display:flex;align-items:center;justify-content:center;}
+    .prod-thumb-icon{font-size:20px;color:var(--sh-lt3);}
+    .prod-name{font-size:10px;color:var(--sh-dg);line-height:1.4;}
+    .prod-price{font-size:11px;font-weight:700;color:var(--sh-blue);margin-top:3px;}
+
+    /* Merch slot */
+    .c3-merch{background:var(--sh-lt3);border:1px solid var(--sh-tan);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+    .merch-text{font-size:11px;color:var(--sh-dark-brown);line-height:1.5;}
+    .merch-text strong{display:block;font-size:12px;}
+    .merch-cta{font-size:10px;font-weight:700;color:var(--sh-blue);white-space:nowrap;cursor:pointer;padding:4px 8px;border:1px solid var(--sh-blue);}
+
+    /* Fallback C3 */
+    .c3-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--sh-mg);font-size:12px;gap:8px;min-height:200px;}
+
+    /* ── NOTES SECTION ── */
+    .notes-wrap{padding:0 32px 32px;}
+    details.notes-section{border:1px solid var(--sh-border);background:var(--sh-white);}
+    details.notes-section summary{padding:12px 20px;font-size:12px;font-weight:700;color:var(--sh-dark-brown);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between;}
+    details.notes-section summary::after{content:'▸';font-size:12px;color:var(--sh-mg);}
+    details.notes-section[open] summary::after{content:'▾';}
+    .notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0 20px 20px;}
+    .notes-block{padding:16px 16px 0;}
+    .notes-block h4{font-size:11px;font-weight:700;color:var(--sh-dark-brown);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid var(--sh-tan);}
+    .notes-block p{font-size:12px;color:var(--sh-dg);line-height:1.6;margin-bottom:6px;}
+    .stat-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--sh-off);}
+    .stat-row:last-child{border-bottom:none;}
+    .stat-v{font-weight:700;color:var(--sh-blue);}
+    .effort-badge{display:inline-block;padding:2px 8px;font-size:10px;font-weight:700;margin-top:6px;}
+    .effort-low{background:#E8F5E9;color:#2E7D32;}
+    .effort-med{background:#FFF3E0;color:#E65100;}
+    .effort-high{background:#FFEBEE;color:#C62828;}
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-logo"><span>Supply</span>House</div>
+  <div class="nav-cats" id="nav-cats"></div>
+</div>
+
+<!-- DOC HEADER -->
+<div class="doc-header">
+  <h1>Full Catalog Taxonomy — All Departments × Three Levels</h1>
+  <p>18b · Select department + level → click any Column 2 item to see Column 3 content (brand chips, filter chips, personal rail, merch slot)</p>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <span class="ctrl-label">Department</span>
+  <div class="dept-btns" id="dept-btns">
+    <button class="dept-btn active" onclick="setDept('plumbing')">Plumbing</button>
+    <button class="dept-btn" onclick="setDept('heating')">Heating</button>
+    <button class="dept-btn" onclick="setDept('hvac')">HVAC</button>
+    <button class="dept-btn" onclick="setDept('electrical')">Electrical</button>
+    <button class="dept-btn" onclick="setDept('fittings')">Fittings</button>
+    <button class="dept-btn" onclick="setDept('valves')">Valves</button>
+    <button class="dept-btn" onclick="setDept('tools')">Tools</button>
+    <button class="dept-btn" onclick="setDept('pex')">PEX</button>
+  </div>
+  <div class="sep"></div>
+  <span class="ctrl-label">Level</span>
+  <div class="level-btns">
+    <button class="level-btn active" onclick="setLevel(1)">Level 1 — Reorder + Add</button>
+    <button class="level-btn" onclick="setLevel(2)">Level 2 — Groupings ★</button>
+    <button class="level-btn" onclick="setLevel(3)">Level 3 — Structural</button>
+  </div>
+  <div class="auth-toggle">
+    <span>Logged out</span>
+    <div class="toggle-track on" id="auth-track" onclick="toggleAuth()"><div class="toggle-knob"></div></div>
+    <span style="color:var(--sh-blue);font-weight:700;">Logged in</span>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="leg"><div class="ld normal"></div>Unchanged</div>
+  <div class="leg"><div class="ld reordered"></div>Reordered</div>
+  <div class="leg"><div class="ld new-item"></div>New addition</div>
+  <div class="leg"><div class="ld relabeled"></div>Relabeled</div>
+  <div class="leg"><div class="ld crosslink"></div>Cross-link</div>
+  <div class="leg"><div class="ld removed"></div>Removed duplicate</div>
+  <span style="margin-left:auto;font-size:10px;color:var(--sh-mg);">Click any Column 2 item to update Column 3 →</span>
+</div>
+
+<!-- MEGA PANEL -->
+<div class="panel-wrap">
+  <div class="mega-panel">
+    <div class="col1">
+      <div class="col-head">Departments</div>
+      <div id="col1-items"></div>
+    </div>
+    <div class="col2">
+      <div class="col-head" id="col2-head">Column 2</div>
+      <div id="col2-items"></div>
+    </div>
+    <div class="col3" id="col3">
+      <div class="c3-fallback">Click a Column 2 item to see Column 3</div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES -->
+<div class="notes-wrap">
+  <details class="notes-section">
+    <summary>Proposal notes & search data for active selection</summary>
+    <div class="notes-grid" id="notes-grid"></div>
+  </details>
+</div>
+
+<script>
+const DEPTS = ['plumbing','heating','hvac','electrical','fittings','valves','tools','pex'];
+
+// ─── Helpers ───────────────────────────────────────────────
+function it(label, type, vol) { return {label, type:type||'normal', vol:vol||null}; }
+function gr(name, items, key) { return {name, items, key:key||name}; }
+
+// ─── Per-dept fallback brands ───────────────────────────────
+const DEPT_BRANDS = {
+  plumbing:  ['Sioux Chief','Liberty Pumps','Woodford','Oatey','Watts'],
+  heating:   ['Taco','Grundfos','Caleffi','Watts','Bradford White'],
+  hvac:      ['Honeywell Home','Ecobee','DiversiTech','Fantech','Little Giant'],
+  electrical:['Siemens','Square D','Honeywell','Southwire','Eaton'],
+  fittings:  ['Viega','SharkBite','Charlotte Pipe','Mueller','Nibco'],
+  valves:    ['Watts','Apollo','Caleffi','Nibco','Webstone'],
+  tools:     ['Milwaukee','RIDGID','Klein Tools','Fieldpiece','Navac'],
+  pex:       ['Uponor','Viega','SharkBite','Watts']
+};
+
+// ─── Column 3 data keyed by normalized label ─────────────────
+// Key = label.toLowerCase().replace(/[^a-z0-9]/g,' ').trim()
+const C3 = {
+  // ── Plumbing ──
+  'water heaters':        { brands:['Bradford White','AO Smith','Rheem','Rinnai','Navien'], filters:['Gas','Electric','Tankless','40 gal','50 gal','80 gal','Power Vent','Direct Vent'], merch:'Bradford White® Defender™ Safety System — In Stock', products:['BW 40-gal Gas','AO Smith 50-gal','Rinnai RU199in','Rheem 80-gal Elec'] },
+  'pvc cement & primer':  { brands:['Oatey','Christy\'s','Blue Monster','Rectorseal'], filters:['Medium Body','Regular Body','Heavy Body','Purple Primer','All-Purpose','Clear Cement','4 oz','8 oz','32 oz'], merch:null },
+  'hose bibbs & sillcocks':{ brands:['Woodford','Watts','Mueller','BK Products'], filters:['Frost-Free','Standard','1/2"','3/4"','Loose Key','Vacuum Breaker','8" Bury','12" Bury'], merch:null },
+  'sump & utility pumps': { brands:['Liberty Pumps','Zoeller','Wayne','Goulds'], filters:['1/3 HP','1/2 HP','3/4 HP','Cast Iron','Thermoplastic','Pedestal','Submersible','With Switch'], merch:null },
+  'pipe insulation':      { brands:['Armaflex','Nomaco','Insul-Tube','Frost King'], filters:['3/8" Wall','1/2" Wall','3/4" ID','1" ID','1-1/4" ID','2" ID','6 ft','Continuous'], merch:null },
+  'pipe & pipe hangers':  { brands:['Charlotte Pipe','Sioux Chief','Anvil','B-Line'], filters:['1/2"','3/4"','1"','1-1/2"','2"','PVC','Copper','CPVC','Galvanized'], merch:null },
+  'water heating':        { brands:['Bradford White','AO Smith','Rheem','Rinnai'], filters:['Gas','Electric','Tankless','40 gal','50 gal','80 gal'], merch:'Bradford White® Defender™ Safety System — In Stock', products:['BW 40-gal Gas','AO Smith 50-gal','Rinnai RU199in','Rheem 80-gal'] },
+  'pipe & supply':        { brands:['Charlotte Pipe','Oatey','Sioux Chief'], filters:['PVC Sch 40','Copper','1/2"','3/4"','1"','2"'], merch:null },
+  'fixtures & parts':     { brands:['Sioux Chief','Watts','Woodford','BK Products'], filters:['1/2"','3/4"','Frost-Free','Push-Pull','Toilet','Faucet'], merch:null },
+  'drainage & rough-in':  { brands:['Oatey','Sioux Chief','Watts','Zurn'], filters:['2"','3"','4"','PVC','Cast Iron','Floor','Shower','Garage'], merch:null },
+
+  // ── Heating ──
+  'expansion tanks':          { brands:['Amtrol','Watts','Caleffi','Extrol','Flexcon'], filters:['2 gal','4.4 gal','8 gal','14 gal','34 gal','60 gal','Potable','Heating'], merch:'Amtrol Extrol® — Same-Day Ship on Most Sizes', products:['Amtrol Extrol 4.4g','Watts PLT-5','Caleffi 6 gal','Extrol 14 gal'] },
+  'expansion & pressure':     { brands:['Amtrol','Watts','Caleffi','Honeywell'], filters:['Expansion Tank','Pressure Gauge','PRV','2 gal','4.4 gal','1/2"','3/4"'], merch:'Amtrol Extrol® — Same-Day Ship', products:['Amtrol 4.4g','Watts 1/2" PRV','Caleffi Pressure','Amtrol 14g'] },
+  'circulators & pumps':      { brands:['Grundfos','Taco','Wilo','Armstrong','Bell & Gossett'], filters:['1/25 HP','1/12 HP','1/6 HP','Cast Iron','Bronze','Stainless','Flanged','Sweat','Threaded'], merch:'Grundfos UP Series — Most Popular Circ in Stock', products:['Taco 007','Grundfos UP15-42','Taco 0011','B&G NRF-22'] },
+  'mixing & zone controls':   { brands:['Caleffi','Taco','Watts','Honeywell','White-Rodgers'], filters:['Mixing Valve','Zone Valve','Aquastat','1/2"','3/4"','1"','24V','2-Wire','3-Wire'], merch:null },
+  'pressure reducing valves': { brands:['Watts','Caleffi','Apollo','Honeywell','Wilkins'], filters:['1/2"','3/4"','1"','Adjustable','Fixed 50 PSI','25-75 PSI','Lead-Free'], merch:null },
+  'mixing valves':            { brands:['Caleffi','Watts','Honeywell','Webstone'], filters:['1/2"','3/4"','1"','Thermostatic','Manual','Point-of-Use','Whole-System','Solar'], merch:null },
+  'zone valves':              { brands:['Taco','Honeywell','White-Rodgers','Caleffi'], filters:['24V','120V','2-Wire','3-Wire','Normally Open','Normally Closed','1/2"','3/4"'], merch:null },
+  'water heating':            { brands:['Bradford White','AO Smith','Rinnai','Navien'], filters:['Gas','Electric','Tankless','Indirect','40 gal','50 gal'], merch:'Bradford White® Pro Series — Contractor Pricing Available', products:['BW 40-gal NG','AO Smith 50-gal','Rinnai RU180i','Navien NPN'] },
+  'boilers & heat sources':   { brands:['Weil-McLain','Navien','Burnham','Lochinvar'], filters:['Gas','Oil','Propane','Hot Water','Steam','Combi'], merch:null },
+  'air & separation':         { brands:['Caleffi','Spirotherm','Taco','Watts'], filters:['Air Vent','Air Separator','Spirovent','Float','1/2"','3/4"','1"','2"'], merch:null },
+
+  // ── HVAC ──
+  'thermostats':              { brands:['Honeywell Home','Ecobee','Emerson','White-Rodgers','Lux'], filters:['Smart','7-Day Programmable','Non-Programmable','24V','Heat Pump','2-Stage','Line Voltage','WiFi'], merch:'Ecobee SmartThermostat Premium — In Stock', products:['Honeywell T6 Pro','Ecobee SmartPro','Emerson 1F80','T-Stat Wiring Guide'] },
+  'thermostats & controls':   { brands:['Honeywell Home','Ecobee','Emerson','White-Rodgers'], filters:['Smart','7-Day','Non-Programmable','24V','Heat Pump','WiFi','2-Stage'], merch:'Ecobee SmartThermostat — In Stock', products:['Honeywell T6 Pro','Ecobee SmartPro','Emerson 1F80','Ecobee EB-STATE6'] },
+  'condensate pumps':         { brands:['Little Giant','DiversiTech','Hartell','Aspen','Rectorseal'], filters:['115V','230V','15 GPH','30 GPH','Reservoir','Inline','With Switch','Without Switch'], merch:'Little Giant VCMA Series — Most Popular in Stock', products:['LG VCMA-20ULS','DiversiTech CP-22','Hartell A3-X','Aspen Mini Lime'] },
+  'capacitors':               { brands:['Genco','Packard','Motor Guard','HVAC Premium'], filters:['5 MFD','7.5 MFD','10 MFD','15 MFD','Dual Run','Single Run','370V','440V','Round','Oval'], merch:null },
+  'contactors':               { brands:['Honeywell','Square D','Siemens','GE','Packard'], filters:['24V Coil','120V Coil','240V Coil','2-Pole','3-Pole','20A','30A','40A'], merch:null },
+  'repair components':        { brands:['Genco','Packard','Honeywell','Emerson','GE'], filters:['Capacitor','Contactor','Condenser Fan Motor','Blower Motor','5 MFD','7.5 MFD','24V','120V'], merch:null, products:['Dual Run Cap 45/5','24V Contactor 30A','Condenser Fan Motor','Blower Motor 1/3HP'] },
+  'mini splits':              { brands:['Mitsubishi','Daikin','LG','Fujitsu','Carrier'], filters:['9,000 BTU','12,000 BTU','18,000 BTU','24,000 BTU','36,000 BTU','Heat Pump','Cooling Only','230V'], merch:'Mitsubishi M-Series — Contractor Pricing', products:['Mitsu 12K MSZ-GL','Daikin 9K FTX','LG 18K LS180','Fujitsu 12K ASU'] },
+  'mini-splits & refrigerant':{ brands:['Mitsubishi','Daikin','Viega','RLS/ZoomLock'], filters:['9,000 BTU','12,000 BTU','18,000 BTU','ZoomLock 1/4"','ZoomLock 3/8"','Line Set 1/4"','Line Set 3/8"'], merch:null },
+  'condensate & drainage':    { brands:['Little Giant','DiversiTech','Hartell','Rectorseal'], filters:['Condensate Pump','Neutralizer','Float Switch','Drain Pan','115V','230V','Small','Large Cap'], merch:null, products:['LG VCMA-20ULS','DiversiTech CP-22','CalciTech Neutralizer','Float Switch SPDT'] },
+  'ventilation & air quality':{ brands:['Fantech','Panasonic','Broan','Aprilaire','Trane'], filters:['ERV','HRV','Exhaust Fan','Dehumidifier','50 CFM','80 CFM','110 CFM','ENERGY STAR'], merch:null },
+  'ervs & hrvs':              { brands:['Fantech','Broan','Lifebreath','Venmar'], filters:['ERV','HRV','40-60 CFM','100-160 CFM','Heat Recovery','Energy Recovery'], merch:null },
+  'condensate neutralizers':  { brands:['CalciTech','DiversiTech','Rectorseal','Reflex'], filters:['Small Capacity','Large Capacity','Replacement Granules','Kit'], merch:null },
+
+  // ── Electrical ──
+  'contactors':               { brands:['Honeywell','Siemens','Square D','GE','Packard'], filters:['24V Coil','120V Coil','240V Coil','2-Pole','3-Pole','20A','30A','40A'], merch:null },
+  'controls & wiring':        { brands:['Honeywell','Siemens','Southwire','Southwire','Square D'], filters:['Contactor','Transformer','Thermostat Wire','18/2','18/5','24V','120V','240V'], merch:null },
+  'transformers':             { brands:['Honeywell','Functional Devices','Siemens','Basler'], filters:['40 VA','75 VA','100 VA','24V Secondary','120V Primary','Multi-Tap','Class 2'], merch:null },
+  'surge protectors':         { brands:['Siemens','Eaton','Leviton','Southwire','Square D'], filters:['Whole Home','Type 2','Type 1','120V','240V','120 kA','200 kA','Service Entrance'], merch:'Siemens Whole-Home Surge — Top Seller', products:['Siemens FS100','Eaton CHSPT2ULTRA','Leviton 51120','Southwire HS100'] },
+  'wire & cable':             { brands:['Southwire','Cerrowire','General Cable','Coleman'], filters:['18/2 Thermostat','18/5 Thermostat','14/2 Romex','12/2 Romex','10/3','Stranded','Solid','250 ft','500 ft'], merch:null },
+  'distribution & protection':{ brands:['Siemens','Square D','Eaton','Leviton'], filters:['Circuit Breaker','Disconnect','Fuse','Conduit','120V','240V','20A','30A','60A'], merch:null },
+
+  // ── Fittings ──
+  'copper press (propress)':  { brands:['Viega','RIDGID','Milwaukee','Cembre'], filters:['1/2"','3/4"','1"','1-1/4"','1-1/2"','2"','90° Elbow','Tee','Coupling','Reducer'], merch:'Viega ProPress® — Full Size Range In Stock', products:['Viega 3/4" Coupling','Viega 1/2" 90 Elbow','Viega 3/4" Tee','Viega 1" Coupling'] },
+  'press fittings':           { brands:['Viega','RIDGID','Milwaukee'], filters:['ProPress','MegaPress','ZoomLock','1/2"','3/4"','1"','1-1/2"','2"','Copper','Carbon Steel','Refrigerant'], merch:'Viega ProPress® — Full Range In Stock', products:['Viega ProPress 3/4"','MegaPress 1/2"','ZoomLock 3/8"','ProPress Tee 1"'] },
+  'push-fit sharkbite':       { brands:['SharkBite','Reliance'], filters:['1/2"','3/4"','1"','PEX','CPVC','Copper','90° Elbow','Tee','Coupling','Ball Valve'], merch:null },
+  'push-fit':                 { brands:['SharkBite','Bluefin','Reliance'], filters:['1/2"','3/4"','1"','PEX/CPVC/Copper','Elbow','Tee','Coupling','Ball Valve','Disconnect Clip'], merch:null },
+  'pvc & plastic':            { brands:['Charlotte Pipe','Spears','Nibco','Lasco'], filters:['Sch 40','Sch 80','DWV','1/2"','3/4"','1"','1-1/4"','1-1/2"','2"','3"'], merch:null },
+  'copper & brass':           { brands:['Mueller','Matco Norca','Nibco','Elkhart'], filters:['Wrot Copper','Cast Copper','Brass','1/2"','3/4"','1"','Sweat','Compression','Flare'], merch:null },
+
+  // ── Valves ──
+  'ball valves':              { brands:['Apollo','Watts','Webstone','Nibco','SharkBite'], filters:['1/2"','3/4"','1"','1-1/4"','1-1/2"','2"','Full Port','Standard Port','Brass','Stainless','Solder','Press','FIP'], merch:'Apollo 600 Series — Full Port in Stock', products:['Apollo 3/4" FP Brass','Watts 1/2" Ball Valve','Webstone 3/4" Press','SharkBite 1/2" BV'] },
+  'shutoff & isolation':      { brands:['Apollo','Watts','Nibco','Webstone'], filters:['Ball Valve','Gate Valve','1/2"','3/4"','1"','Brass','CPVC','PVC','Full Port'], merch:'Apollo 600 Series — Full Port in Stock', products:['Apollo 3/4" FP','Watts 1/2" Ball','CPVC 1/2" Ball','PVC 3/4" Ball'] },
+  'flow control & specialty': { brands:['Watts','Caleffi','Honeywell','Apollo','Woodford'], filters:['Check Valve','PRV','Mixing Valve','Zone Valve','Hose Bibb','1/2"','3/4"','1"'], merch:null },
+  'check valves':             { brands:['Watts','Nibco','Apollo','Flomatic'], filters:['1/2"','3/4"','1"','1-1/2"','2"','Swing','Spring','Silent','Brass','Bronze','PVC'], merch:null },
+
+  // ── Tools ──
+  'vacuum pumps':             { brands:['Navac','Appion','JB Industries','Yellow Jacket','Robinair'], filters:['3 CFM','6 CFM','8 CFM','Two-Stage','Single-Stage','1/4" Ports','Battery','Corded'], merch:'Navac NP6DM Deep Vac — Top-Rated Pump', products:['Navac NP6DM','Appion HVAC-400','JB DV-200N','Yellow Jacket 93600'] },
+  'recovery machines':        { brands:['Appion','Yellow Jacket','Navac','Robinair','CPS'], filters:['Single Vapor','Push-Pull','115V','115/220V','R-410A','R-22','All Refrigerants'], merch:null },
+  'nitrogen regulators':      { brands:['JB Industries','Yellow Jacket','Navac','Ritchie'], filters:['0-300 PSI','0-600 PSI','CGA-580','Dual-Stage','With Gauge','With Blowgun'], merch:null },
+  'hvac service tools':       { brands:['Milwaukee','Navac','Appion','Fieldpiece','Yellow Jacket'], filters:['Vacuum Pump','Recovery Machine','Manifold Gauge','Leak Detector','Nitrogen Reg','Thermal Imaging'], merch:'Milwaukee M18 FUEL HVAC Bundle', products:['Navac NP6DM Pump','Appion G5Twin','Fieldpiece SM480V','Milwaukee 2268-20'] },
+  'soldering & welding':      { brands:['Turbo Torch','Victor','Harris','Worthington','Lincoln'], filters:['MAPP Gas','Propane','Oxy-Acetylene','Solder','Flux','Filler Rod','Tip Kits'], merch:null },
+  'copper press tools':       { brands:['Milwaukee','RIDGID','Viega','Cembre'], filters:['Battery','Corded','1/2"–2" Range','1/4"–2" Range','12V','18V','M12','M18'], merch:'Milwaukee M18 Force Logic Press Tool', products:['Milwaukee 2473-22','RIDGID RP 340','Viega PT2001','Cembre ER-AKC'] },
+  'power & general tools':    { brands:['Milwaukee','RIDGID','Klein Tools','DeWalt'], filters:['Drill/Driver','Hammer Drill','Reciprocating Saw','Circular Saw','Battery','Corded','M18','M12'], merch:'Milwaukee M18 FUEL Combo Kit', products:['Milwaukee 2997-22','RIDGID Gen5X','Klein NCVT-3P','Milwaukee 2601-20'] },
+  'plumbing & pipe tools':    { brands:['RIDGID','Milwaukee','General Pipe','Reed'], filters:['Pipe Cutter','Pipe Threader','Pipe Vise','Drain Machine','PVC Cutter','Pipe Wrench'], merch:null },
+
+  // ── PEX ──
+  'pex plumbing':             { brands:['Uponor','Viega','SharkBite','Sioux Chief'], filters:['1/2"','3/4"','1"','PEX-A','PEX-B','Red','Blue','White','100 ft','300 ft'], merch:'Uponor AquaPEX® — Pro Contractor Pricing', products:['Uponor 1/2" PEX-A','Viega PureFlow 3/4"','SharkBite 1/2" PEX','Uponor 3/4" Red'] },
+  'pex supply':               { brands:['Uponor','Viega','SharkBite','Watts'], filters:['1/2"','3/4"','1"','PEX-A','PEX-B','PEX-C','Red (Hot)','Blue (Cold)','White','100 ft'], merch:'Uponor AquaPEX® — Most Popular Sizes', products:['Uponor 1/2" PEX-A','Viega 3/4" PureFlow','SharkBite 1/2"','Watts 1/2" PEX'] },
+  'radiant heat':             { brands:['Uponor','Warmup','Nuheat','Schluter'], filters:['120V','240V','Floating Floor','Glue-Down','Staple-Up','15 sq ft','30 sq ft','Mesh Mat'], merch:null },
+  'radiant & hydronic':       { brands:['Uponor','Caleffi','Watts','Tekmar'], filters:['Radiant Panel','Manifold','Controls','Mixing','Single Zone','Multi-Zone','120V','WiFi'], merch:null, products:['Uponor Manifold 6-Loop','Caleffi MixCal','Watts Radiant Panel','Tekmar 360 Control'] },
+};
+
+// ─── Column 2 item catalog data ─────────────────────────────
+function it(label, type, vol) { return {label, type:type||'normal', vol:vol||null}; }
+function gr(name, items, key) { return {name, items, key:key||name.toLowerCase()}; }
+
+const CATALOG = {
+  plumbing:{name:'Plumbing',
+    l1:{type:'flat',items:[it('Water Heaters','reordered','~2,750'),it('Water Heater Parts','reordered'),it('PVC Cement & Primer','new-item','~2,665'),it('Sump & Utility Pumps','relabeled','940'),it('Hose Bibbs & Sillcocks','relabeled','~2,463'),it('Drains'),it('Backflow'),it('Toilet Parts'),it('Stops & Risers'),it('Water Filters'),it('Pipe & Pipe Hangers','relabeled'),it('Pipe Insulation','reordered','1,292'),it('Tub & Shower'),it('Faucets'),it('Faucet Parts'),it('Flush Valves'),it('Tubular'),it('Arrestors'),it('Well Tanks'),it('Grease Traps'),it('Irrigation'),it('Fire Sprinklers'),it('Access Doors'),it('PEX Plumbing →','crosslink'),it('Valves →','crosslink'),it('Tools','removed')]},
+    l2:{type:'grouped',groups:[gr('Water Heating',[it('Water Heaters','reordered','~2,750'),it('Water Heater Parts','reordered'),it('Water Filters'),it('Well Tanks')]),gr('Pipe & Supply',[it('PVC Cement & Primer','new-item','~2,665'),it('Pipe'),it('Pipe Hangers'),it('Pipe Insulation','reordered','1,292')]),gr('Drainage & Rough-In',[it('Drains'),it('Tubular'),it('Backflow'),it('Grease Traps'),it('Arrestors')]),gr('Fixtures & Parts',[it('Hose Bibbs & Sillcocks','relabeled','~2,463'),it('Faucets'),it('Faucet Parts'),it('Toilet Parts'),it('Flush Valves'),it('Stops & Risers'),it('Tub & Shower')]),gr('Pumps & Specialty',[it('Sump & Utility Pumps','relabeled','940'),it('Irrigation'),it('Fire Sprinklers'),it('Access Doors'),it('Outlet Boxes')])],crosslinks:['See also: Valves →','See also: Fittings →','See also: PEX →','See also: Tools →']},
+    l3:{type:'grouped',groups:[gr('Water Heating',[it('Water Heaters','reordered'),it('Water Heater Parts'),it('Water Filters'),it('Well Tanks')]),gr('Pipe & Supply',[it('PVC Cement & Primer','new-item'),it('Pipe'),it('Pipe Hangers'),it('Pipe Insulation')]),gr('Drainage & Rough-In',[it('Drains'),it('Tubular'),it('Backflow'),it('Grease Traps')]),gr('Fixtures & Parts',[it('Hose Bibbs & Sillcocks','relabeled'),it('Faucets'),it('Faucet Parts'),it('Toilet Parts'),it('Flush Valves'),it('Tub & Shower')]),gr('Pumps & Specialty',[it('Sump & Utility Pumps','relabeled'),it('Irrigation'),it('Fire Sprinklers')])],crosslinks:['See also: Valves →','See also: Fittings →','See also: PEX →','See also: Tools →'],note:'L3: Duplicates (Tools, Valves, Fittings, PEX sub-items) removed and replaced with cross-links. ~22 focused items remain.'},
+    why:{l1:'Water Heaters (2,750) and PVC Cement & Primer (2,665 combined) promoted from alphabetical burial. "Hose Bibbs & Sillcocks" merges three vocab variants (~2,463). Tools removed as duplicate.',l2:'Five groups map to distinct job contexts. Water Heating and Pipe & Supply carry the highest search clusters. Grouping prevents 27 items from appearing as one flat list.',l3:'Removes cross-dept duplicates. Result: Plumbing becomes a focused ~22-item department. Cross-links preserve discoverability.',stats:[['Water heater searches','~2,750'],['PVC cement/glue/primer','~2,665'],['Hose bib/bibb/sillcock','~2,463'],['Sump pump','940'],['Pipe insulation','1,292']],effort:1}
+  },
+  heating:{name:'Heating',
+    l1:{type:'grouped',groups:[gr('Boiler Room',[it('Expansion Tanks','reordered','3,469'),it('Pressure Reducing Valves','relabeled','1,271'),it('Mixing Valves','reordered','1,216'),it('Pressure Gauges','reordered','1,263'),it('Circulators & Pumps','relabeled'),it('Zone Valves','reordered','649'),it('Aquastats'),it('Boilers'),it('Boiler Parts'),it('Air Eliminators'),it('Heat Exchangers'),it('Relief Valves'),it('Venting')]),gr('Gas Products',[it('Gas Valves'),it('Gas Cocks'),it('Gas Flex (CSST)'),it('Gas Regulators'),it('Ignitors'),it('Thermocouples')]),gr('Radiators & Trim',[it('Baseboard'),it('Kickspace Heaters'),it('Radiator Valves'),it('Air Valves')]),gr('Specialties',[it('Condensate Neutralizers','new-item','920'),it('Thermostats','reordered'),it('Transformers','reordered'),it('Tekmar Controls'),it('Radiant Heat'),it('Chemicals')])]},
+    l2:{type:'grouped',groups:[gr('Expansion & Pressure',[it('Expansion Tanks','reordered','3,469'),it('Pressure Reducing Valves','relabeled','1,271'),it('Pressure Gauges','relabeled','1,263'),it('Relief Valves'),it('Water Feeders')]),gr('Circulators & Pumps',[it('Circulators & Pumps','relabeled'),it('Grundfos →','crosslink'),it('Taco →','crosslink')]),gr('Mixing & Zone Controls',[it('Mixing Valves','reordered','1,216'),it('Zone Valves','reordered','649'),it('Thermostatic Mixing Valves'),it('Aquastats'),it('Switching Relays')]),gr('Water Heating',[it('Water Heaters'),it('Water Heater Parts'),it('Tankless')]),gr('Boilers & Heat Sources',[it('Boilers'),it('Boiler Parts'),it('Boiler Trim'),it('Heat Exchangers'),it('Heat Pumps')]),gr('Air & Separation',[it('Air Eliminators'),it('Air Vents','relabeled'),it('Condensate Neutralizers','new-item','920'),it('Venting')]),gr('Gas Products',[it('Gas Valves'),it('Gas Flex (CSST)'),it('Gas Regulators'),it('Ignitors'),it('Thermocouples')])]},
+    l3:{type:'grouped',groups:[gr('Expansion & Pressure',[it('Expansion Tanks'),it('Pressure Reducing Valves','relabeled'),it('Pressure Gauges','relabeled'),it('Relief Valves')]),gr('Circulators & Pumps',[it('Circulators & Pumps','relabeled'),it('Brand chips in Column 3','crosslink')]),gr('Mixing & Zone Controls',[it('Mixing Valves'),it('Zone Valves'),it('Thermostatic Mixing Valves'),it('Aquastats')]),gr('Water Heating',[it('Water Heaters'),it('Water Heater Parts')]),gr('Boilers & Heat Sources',[it('Boilers'),it('Boiler Parts'),it('Heat Exchangers')]),gr('Air & Separation',[it('Air Eliminators'),it('Air Vents','relabeled'),it('Condensate Neutralizers','new-item'),it('Venting')]),gr('Gas Products',[it('Gas Valves'),it('Gas Flex (CSST)'),it('Gas Regulators'),it('Ignitors')])],crosslinks:['Fittings cross-linked → Fittings dept'],note:'L3: Vocabulary standardized throughout. Fittings/Nipples sub-items replaced with cross-links.'},
+    why:{l1:'Heating already has the strongest group structure. Level 1 reorders within existing groups. Expansion Tank → #1 (3,469 = #1 search on the whole site). Condensate Neutralizers added (920 searches, not named today).',l2:'Six search-aligned groups replace the legacy Boiler Room / Specialties structure. Groups derived from search clusters. See 17_C7-Content-Layer.md for full rationale.',l3:'Vocabulary standardization. Pumps labeled "Circulators" to distinguish from Plumbing\'s "Sump Pumps." Fittings/Nipples cross-linked.',stats:[['Expansion tank','3,469'],['Taco brand proxy (pump nav failure)','~4,371'],['Pressure reducing valve','1,271'],['Mixing valve','1,216'],['Condensate neutralizer','920']],effort:2}
+  },
+  hvac:{name:'HVAC',
+    l1:{type:'flat',items:[it('Thermostats','reordered','~2,247'),it('Condensate Pumps','reordered','2,606'),it('Capacitors','reordered','~1,722'),it('Contactors','reordered','~1,818'),it('Line Sets','reordered','~1,384'),it('Mini Splits','relabeled','~1,153'),it('Condensate Neutralizers','new-item','920'),it('Float Switches','new-item','679'),it('ERVs & HRVs','reordered','845'),it('Filter Driers','new-item','749'),it('Dehumidifiers'),it('Humidifiers'),it('Air Cleaners'),it('ZoomLock (Refrigerant Press)','relabeled'),it('Controls'),it('Dampers'),it('Compressors'),it('Flex Duct'),it('Motors'),it('Registers'),it('HVAC Equipment'),it('Replacement Parts'),it('Range Hoods'),it('Ventilation Fans'),it('Venting'),it('Tools','crosslink')]},
+    l2:{type:'grouped',groups:[gr('Thermostats & Controls',[it('Thermostats','reordered','~2,247'),it('Controls'),it('Temp Controllers'),it('Dampers')]),gr('Repair Components',[it('Capacitors','reordered','~1,722'),it('Contactors','reordered','~1,818'),it('Motors (Condenser/Blower)','relabeled','~1,220'),it('Compressors'),it('Replacement Parts')]),gr('Mini-Splits & Refrigerant',[it('Mini Splits','relabeled','~1,153'),it('ZoomLock (Refrigerant Press)','relabeled'),it('Filter Driers','new-item','749'),it('HVAC/R Valves'),it('Line Sets','reordered','~1,384')]),gr('Condensate & Drainage',[it('Condensate Pumps','reordered','2,606'),it('Condensate Neutralizers','new-item','920'),it('Float Switches','new-item','679'),it('Drain Pans','new-item','568')]),gr('Ventilation & Air Quality',[it('ERVs & HRVs','reordered','845'),it('Ventilation Fans'),it('Dehumidifiers','normal','608'),it('Humidifiers'),it('Air Cleaners'),it('Flex Duct'),it('Registers')]),gr('HVAC Equipment',[it('HVAC Equipment'),it('Range Hoods'),it('Venting')])]},
+    l3:{type:'grouped',groups:[gr('Thermostats & Controls',[it('Thermostats'),it('Controls'),it('Dampers'),it('Temp Controllers')]),gr('Repair Components',[it('Capacitors'),it('Contactors'),it('Motors','relabeled'),it('Compressors')]),gr('Mini-Splits & Refrigerant',[it('Mini Splits','relabeled'),it('ZoomLock','normal'),it('Filter Driers','new-item'),it('Line Sets')]),gr('Condensate & Drainage',[it('Condensate Pumps'),it('Condensate Neutralizers','new-item'),it('Float Switches','new-item'),it('Drain Pans','new-item')]),gr('Ventilation & Air Quality',[it('ERVs & HRVs'),it('Dehumidifiers'),it('Humidifiers'),it('Ventilation Fans')])],crosslinks:['Shop by Job: Common HVAC Repairs →'],note:'L3 adds "Common HVAC Repairs" as Shop by Job entry — ~5,534 repair component searches. See 17_ for full spec.'},
+    why:{l1:'HVAC vocabulary gap confirmed. Users search component names (capacitor 1,722, contactor 1,818, motors 1,220) — repair-job searches. 4 new items added. "Mini Split AC" relabeled (covers heat pump use).',l2:'Six search-derived groups. "Repair Components" directly addresses vocabulary gap. "Condensate & Drainage" surfaces the #2 overall search (condensate pump 2,606) as its own group.',l3:'"Common HVAC Repairs" job-type entry maps to how techs think ("I\'m doing a condenser repair"). ~5,534 searches justify a dedicated shortcut.',stats:[['Condensate pump','2,606'],['Thermostat (all variants)','~2,247'],['Contactor (all variants)','~1,818'],['Capacitor (all variants)','~1,722'],['Float switch','679']],effort:2}
+  },
+  electrical:{name:'Electrical',
+    l1:{type:'flat',items:[it('Contactors','reordered','~1,818'),it('Transformers','reordered','~1,635'),it('Disconnects','reordered','851'),it('Wire & Cable','relabeled','839'),it('Surge Protectors','new-item','1,144'),it('Circuit Breakers'),it('Wire Connectors'),it('Controls'),it('Timers'),it('Thermostats'),it('Conduit'),it('Fuses'),it('Switches'),it('Receptacles'),it('Boxes & Covers'),it('Wall Plates'),it('Baseboard'),it('Electric Radiant'),it('Roof De-Icing'),it('CO/Smoke Alarms'),it('Motors'),it('Capacitors'),it('Fittings','removed'),it('Tools','removed'),it('Ventilation Fans','removed')]},
+    l2:{type:'grouped',groups:[gr('Controls & Wiring',[it('Contactors','reordered','~1,818'),it('Transformers','reordered','~1,635'),it('Wire & Cable','relabeled','839'),it('Wire Connectors'),it('Controls'),it('Timers'),it('Thermostats'),it('Boxes & Covers')]),gr('Distribution & Protection',[it('Surge Protectors','new-item','1,144'),it('Circuit Breakers'),it('Disconnects','reordered','851'),it('Fuses'),it('Conduit')]),gr('Devices & Finish',[it('Switches'),it('Receptacles'),it('Wall Plates'),it('CO/Smoke Alarms')]),gr('Heating & Specialty',[it('Baseboard'),it('Electric Radiant'),it('Roof De-Icing'),it('Motors'),it('Capacitors')])]},
+    l3:{type:'grouped',groups:[gr('Controls & Wiring',[it('Contactors'),it('Transformers'),it('Wire & Cable','relabeled'),it('Controls'),it('Thermostats')]),gr('Distribution & Protection',[it('Surge Protectors','new-item'),it('Circuit Breakers'),it('Disconnects'),it('Fuses'),it('Conduit')]),gr('Devices & Finish',[it('Switches'),it('Receptacles'),it('Wall Plates'),it('CO/Smoke Alarms')])],note:'L3 open question: Consolidate Electrical into HVAC? Pure Electrical searches = ~2,671. Most top items are HVAC-shared. Catalog/merch decision.'},
+    why:{l1:'Three changes: (1) Surge Protectors added — 1,144 searches, no current named entry; (2) Contactors + Transformers to top (~3,453 combined); (3) Fittings/Tools/Ventilation removed as duplicates.',l2:'"Controls & Wiring" group captures HVAC-adjacent trades who land in Electrical for controls work. After duplicate removal, 4 groups cover 20 focused items.',l3:'Consolidation open question — Electrical search volume (~2,671) is low vs HVAC. Most high-volume items are HVAC-shared. Business/catalog decision before structural change.',stats:[['Contactor (all variants)','~1,818'],['Transformer (all variants)','~1,635'],['Surge protector','1,144'],['Disconnect','851'],['Thermostat wire','839']],effort:3}
+  },
+  fittings:{name:'Fittings',
+    l1:{type:'flat',items:[it('Copper Press (ProPress)','reordered','~2,374'),it('MegaPress','reordered'),it('ZoomLock (Refrigerant Press)','relabeled','~925'),it('Push-Fit SharkBite','reordered','470'),it('Push-Fit Bluefin','reordered','461'),it('MegaPressG','reordered'),it('Brass','reordered','~1,199'),it('Copper','reordered','680'),it('PEX Fittings','reordered','595'),it('PVC Sched 40'),it('PVC DWV'),it('CPVC'),it('Compression'),it('Flare'),it('Copper ACR'),it('Galvanized'),it('Black'),it('Stainless Steel'),it('ABS DWV'),it('No Hub Couplings'),it('Water Service'),it('Flexible'),it('Garden Hose'),it('Galvanized (Import)'),it('Black (Import)'),it('PVC Sched 80'),it('PVC Insert'),it('Electrical','removed')]},
+    l2:{type:'grouped',groups:[gr('Press Fittings',[it('Copper Press (ProPress)','reordered','~2,374'),it('MegaPress (Carbon Steel)','relabeled'),it('MegaPressG (Gas)','relabeled'),it('ZoomLock (Refrigerant)','relabeled','~925')]),gr('Push-Fit',[it('Push-Fit SharkBite','reordered','470'),it('Push-Fit Bluefin','reordered','461')]),gr('PVC & Plastic',[it('PVC Sched 40'),it('PVC DWV'),it('PVC Sched 80'),it('PVC Insert'),it('CPVC'),it('ABS DWV')]),gr('Copper & Brass',[it('Copper','reordered','680'),it('Copper ACR'),it('Brass','reordered','~1,199'),it('Compression'),it('Flare')]),gr('Threaded & Iron',[it('Black'),it('Black (Import)'),it('Galvanized'),it('Galvanized (Import)'),it('Stainless Steel'),it('Water Service')]),gr('PEX & Specialty',[it('PEX Fittings','reordered','595'),it('No Hub Couplings'),it('Flexible'),it('Garden Hose')]),gr('Nipples',[it('Brass Nipples','reordered','~1,199'),it('Black Nipples'),it('Galvanized Nipples'),it('Chrome Nipples'),it('Dielectric Nipples'),it('Stainless Nipples')])]},
+    l3:{type:'grouped',groups:[gr('Press Fittings',[it('Copper Press (ProPress)'),it('MegaPress'),it('MegaPressG'),it('ZoomLock (Refrigerant)')]),gr('Push-Fit',[it('Push-Fit SharkBite'),it('Push-Fit Bluefin')]),gr('PVC & Plastic',[it('PVC Sched 40'),it('PVC DWV'),it('CPVC'),it('ABS DWV')]),gr('Copper & Brass',[it('Copper'),it('Brass'),it('Compression'),it('Flare')]),gr('Threaded & Iron',[it('Black'),it('Galvanized'),it('Stainless Steel')]),gr('Nipples',[it('Brass'),it('Black'),it('Galvanized'),it('Chrome')])],crosslinks:['ZoomLock also in: HVAC → Mini-Splits & Refrigerant'],note:'L3: "Electrical" fittings removed (belongs in Electrical dept). ZoomLock cross-linked from HVAC for refrigerant techs.'},
+    why:{l1:'Press fittings (ProPress ~2,374, ZoomLock ~925) clustered at top — currently scattered alphabetically. Electrical fittings removed (duplicate).',l2:'Fittings is the strongest case for grouping — 42 items with natural clusters by joining method. "Press Fittings" group captures ~3,300 searches.',l3:'ZoomLock cross-linked from HVAC refrigerant subcategory. Electrical fittings removed. Ball valve question remains open (lives in Valves dept).',stats:[['Press fittings (ProPress + variants)','~2,374'],['ZoomLock / RLS refrigerant','~925'],['Brass nipples','~1,199'],['Copper fittings','680'],['PEX fittings','595']],effort:2}
+  },
+  valves:{name:'Valves',
+    l1:{type:'flat',items:[it('Ball Valves',null,'~3,902'),it('Hose Bibbs & Sillcocks','relabeled','~2,463'),it('Check Valves','reordered','1,103'),it('Pressure Reducing Valves','new-item','1,271'),it('Mixing Valves','new-item','1,216'),it('Zone Valves','new-item','649'),it('Gate Valves'),it('Solenoid Valves'),it('CPVC Ball Valves'),it('PVC Ball Valves'),it('Wash Machine Valve'),it('Boiler Drains'),it('Wye Strainers'),it('Gas Cocks'),it('Stops & Risers')]},
+    l2:{type:'grouped',groups:[gr('Shutoff & Isolation',[it('Ball Valves',null,'~3,902'),it('CPVC Ball Valves'),it('PVC Ball Valves'),it('Gate Valves'),it('Wash Machine Valve'),it('Boiler Drains'),it('Stops & Risers')]),gr('Flow Control & Specialty',[it('Hose Bibbs & Sillcocks','relabeled','~2,463'),it('Check Valves','reordered','1,103'),it('Pressure Reducing Valves','new-item','1,271'),it('Mixing Valves','new-item','1,216'),it('Zone Valves','new-item','649'),it('Solenoid Valves'),it('Gas Cocks'),it('Wye Strainers')])]},
+    l3:{type:'grouped',groups:[gr('Shutoff & Isolation',[it('Ball Valves'),it('CPVC Ball Valves'),it('PVC Ball Valves'),it('Gate Valves'),it('Wash Machine Valve')]),gr('Flow Control',[it('Check Valves'),it('Pressure Reducing Valves','new-item'),it('Mixing Valves','new-item'),it('Zone Valves','new-item'),it('Solenoid Valves')]),gr('Outdoor & Supply',[it('Hose Bibbs & Sillcocks','relabeled'),it('Stops & Risers'),it('Wye Strainers')]),gr('Gas',[it('Gas Cocks')])],note:'L3 open question: Merge Valves into Fittings as "Fittings & Valves"? Ball valves (~3,902 searches) argue for keeping Valves standalone. Catalog/merch decision.'},
+    why:{l1:'Key change: add 3 items from Heating only — Pressure Reducing Valves (1,271), Mixing Valves (1,216), Zone Valves (649). Users searching these terms directly should find them in Valves. Hose Bibbs + Sillcocks merged.',l2:'Two groups for 15 items. Shutoff vs. Flow Control separates on/off use case from system-design use case.',l3:'Valves + Fittings merge open question. Ball valves (~3,902) make the strongest argument for keeping Valves standalone.',stats:[['Ball valve (all variants)','~3,902'],['Hose bib/bibb/sillcock','~2,463'],['Pressure reducing valve','1,271'],['Mixing valve','1,216'],['Check valve','1,103']],effort:1}
+  },
+  tools:{name:'Tools',
+    l1:{type:'flat',items:[it('Power Tools','reordered'),it('Hand Tools','reordered'),it('Vacuum Pumps','reordered','737'),it('Recovery Machines','new-item','567'),it('Nitrogen Regulators','new-item','502'),it('Soldering & Welding','reordered','695'),it('HVAC Tools'),it('Copper Press Tools'),it('Pipe Cutters'),it('Drain Cleaning'),it('PEX Tools'),it('Flaring & Swaging'),it('Tubing Benders'),it('Manometers'),it('HVAC Leak Detectors'),it('HVAC Duct Tools'),it('Pipe Threaders'),it('Pipe Vises'),it('Plumbing Tools'),it('PVC Tools'),it('Saws & Blades'),it('Drivers & Keys'),it('Inspection Cameras'),it('Thermal Imaging'),it('Electrical Tools'),it('Electrical Testers'),it('Wire Installation'),it('Tool Storage'),it('Worklights & Flashlights'),it('Workwear & Safety'),it('Tape')]},
+    l2:{type:'grouped',groups:[gr('HVAC Service Tools',[it('Vacuum Pumps','reordered','737'),it('Recovery Machines','new-item','567'),it('Nitrogen Regulators','new-item','502'),it('HVAC Tools'),it('Manometers'),it('HVAC Leak Detectors'),it('Flaring & Swaging'),it('Tubing Benders'),it('Thermal Imaging'),it('HVAC Duct Tools')]),gr('Plumbing & Pipe Tools',[it('Copper Press Tools'),it('Soldering & Welding','reordered','695'),it('Pipe Cutters'),it('PEX Tools'),it('Drain Cleaning'),it('PVC Tools'),it('Pipe Threaders'),it('Pipe Vises'),it('Plumbing Tools')]),gr('Power & General Tools',[it('Power Tools','reordered'),it('Hand Tools','reordered'),it('Saws & Blades'),it('Drivers & Keys'),it('Inspection Cameras')]),gr('Electrical Tools',[it('Electrical Tools'),it('Electrical Testers'),it('Wire Installation')]),gr('Work & Safety',[it('Tool Storage'),it('Worklights & Flashlights'),it('Workwear & Safety'),it('Tape')])]},
+    l3:{type:'grouped',groups:[gr('HVAC Service Tools',[it('Vacuum Pumps'),it('Recovery Machines','new-item'),it('Nitrogen Regulators','new-item'),it('Manometers'),it('HVAC Leak Detectors'),it('Flaring & Swaging'),it('HVAC Duct Tools')]),gr('Plumbing & Pipe Tools',[it('Copper Press Tools'),it('Soldering & Welding'),it('Pipe Cutters'),it('PEX Tools'),it('Drain Cleaning'),it('PVC Tools')]),gr('Power & General Tools',[it('Power Tools'),it('Hand Tools'),it('Saws & Blades'),it('Inspection Cameras')]),gr('Electrical Tools',[it('Electrical Tools'),it('Electrical Testers'),it('Wire Installation')]),gr('Work & Safety',[it('Tool Storage'),it('Workwear & Safety'),it('Tape')])],crosslinks:['Milwaukee → Column 3 brand chips in all subcategories'],note:'L3: Milwaukee (~1,827 searches) dominant. "Shop by Brand" shortcut viable if click data confirms brand-first nav. Current Brands column migrates to Column 3 chips (C7 standard).'},
+    why:{l1:'Recovery Machines (567) and Nitrogen Regulators (502) are HVAC service tools searched by name but not currently distinct subcategories. Adding them is a catalog entry, not a structural change. Milwaukee brand (~1,827) handled by Column 3 brand chips.',l2:'Groups by trade context. HVAC Service Tools is the most search-active cluster. Plumbing techs don\'t need to scan past HVAC tools.',l3:'Milwaukee brand question — Column 2 Brands list migrates to Column 3 brand chips (the C7 standard for all departments).',stats:[['Milwaukee (all variants)','~1,827'],['Vacuum pump','737'],['Brazing rod / soldering','695'],['Recovery machine','567'],['Nitrogen regulator','502']],effort:1}
+  },
+  pex:{name:'PEX',
+    l1:{type:'grouped',groups:[gr('PEX Plumbing',[it('Tubing','reordered','483'),it('Fittings','reordered','595'),it('Manifolds'),it('Valves','crosslink'),it('Install Parts'),it('Packages'),it('Tools','crosslink')]),gr('Radiant Heat',[it('Panels','reordered'),it('Controls','reordered'),it('Tubing'),it('Manifolds'),it('Fittings'),it('Insulation'),it('Install Parts'),it('Electric Radiant','crosslink'),it('Valves','crosslink'),it('Packages')])]},
+    l2:{type:'grouped',groups:[gr('PEX Supply',[it('Tubing','reordered'),it('Fittings','reordered','595'),it('Manifolds'),it('Install Parts'),it('Packages')]),gr('Radiant & Hydronic',[it('Panels','reordered'),it('Controls','reordered'),it('Tubing'),it('Manifolds'),it('Fittings'),it('Insulation'),it('Install Parts'),it('Packages')])]},
+    l3:{type:'grouped',groups:[gr('PEX Supply',[it('Tubing'),it('Fittings'),it('Manifolds'),it('Install Parts')]),gr('Radiant & Hydronic',[it('Panels'),it('Controls'),it('Tubing'),it('Manifolds'),it('Fittings'),it('Insulation')])],note:'L3 open question: Keep PEX as standalone dept, or merge into Plumbing + Heating? Recommendation for V1: keep standalone (SupplyHouse specialist positioning). Revisit after click data.'},
+    why:{l1:'PEX already has the best structure. Minor reorder: Tubing and Fittings surfaced first (most searched). Valves and Tools converted to cross-links.',l2:'Group renames: "PEX Plumbing" → "PEX Supply" (removes tautology), "Radiant Heat" → "Radiant & Hydronic" (broader application).',l3:'Standalone dept question. Pro audience is PEX-system specialists who navigate directly to PEX. Keep V1.',stats:[['PEX (generic)','779'],['3/4" PEX fittings','595'],['1/2" PEX tubing','483'],['Uponor (brand)','453'],['SharkBite (brand)','450']],effort:1}
+  }
+};
+
+// ─── State ───────────────────────────────────────────────────
+let dept = 'plumbing';
+let level = 1;
+let loggedIn = true;
+let activeItem = null;
+let activeGroupItems = null; // items for the active group (L2/L3 only)
+
+// ─── C3 lookup ────────────────────────────────────────────────
+function getC3Key(label) {
+  return label.toLowerCase().replace(/[→↗]/g,'').replace(/\(.*?\)/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+}
+function lookupC3(label) {
+  const key = getC3Key(label);
+  // exact
+  if (C3[key]) return C3[key];
+  // partial match
+  for (const k of Object.keys(C3)) {
+    if (key.includes(k) || k.includes(key)) return C3[k];
+  }
+  return null;
+}
+
+// ─── Render ───────────────────────────────────────────────────
+function setDept(d) {
+  dept = d; activeItem = null;
+  document.querySelectorAll('.dept-btn').forEach(b => b.classList.toggle('active', b.textContent.trim().toLowerCase() === d));
+  render();
+}
+function setLevel(lv) {
+  level = lv; activeItem = null;
+  document.querySelectorAll('.level-btn').forEach((b,i) => b.classList.toggle('active', i+1 === lv));
+  render();
+}
+function toggleAuth() {
+  loggedIn = !loggedIn;
+  const t = document.getElementById('auth-track');
+  t.classList.toggle('on', loggedIn);
+  renderC3();
+}
+
+function render() {
+  renderNav();
+  renderC1();
+  renderC2();
+  // Set default active — always the first selectable item
+  const data = CATALOG[dept]['l'+level];
+  if (data.type === 'flat') {
+    const first = data.items.find(i => i.type !== 'removed' && i.type !== 'crosslink');
+    activeItem = first ? first.label : null;
+  } else {
+    const firstItem = data.groups[0]?.items?.find(i => i.type !== 'removed' && i.type !== 'crosslink');
+    activeItem = firstItem ? firstItem.label : null;
+  }
+  activeGroupItems = null; // no longer used
+  markActive();
+  renderC3();
+  renderNotes();
+}
+
+function renderNav() {
+  const nc = document.getElementById('nav-cats');
+  nc.innerHTML = DEPTS.map(d => `<div class="nav-cat${d===dept?' active':''}" onclick="setDept('${d}')">${CATALOG[d].name}</div>`).join('');
+}
+
+function renderC1() {
+  document.getElementById('col1-items').innerHTML = DEPTS.map(d =>
+    `<div class="c1-item${d===dept?' active':''}" onclick="setDept('${d}')">${CATALOG[d].name}</div>`
+  ).join('');
+  document.getElementById('col2-head').textContent = `Column 2 — ${CATALOG[dept].name}`;
+}
+
+function renderC2() {
+  const data = CATALOG[dept]['l'+level];
+  const col2 = document.querySelector('.col2');
+  let html = '';
+
+  if (data.type === 'flat') {
+    // Flat: 2-column grid, no scroll
+    col2.style.width = '270px';
+    html += '<div class="c2-grid">';
+    data.items.forEach(item => { html += itemRow(item); });
+    html += '</div>';
+  } else {
+    // Grouped: 1-col (≤3 groups) or 2-col (4+ groups) — full catalog visible, no scroll
+    const multiCol = data.groups.length > 3;
+    col2.style.width = multiCol ? '400px' : '220px';
+    const wrapClass = multiCol ? 'c2-groups-2col' : 'c2-groups-1col';
+    html += `<div class="${wrapClass}">`;
+    data.groups.forEach(grp => {
+      html += `<div class="c2-group-block">`;
+      html += `<div class="c2-group-header">${grp.name}</div>`;
+      grp.items.forEach(item => { html += itemRow(item); });
+      html += `</div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (data.crosslinks?.length) {
+    html += `<div class="c2-xlink-footer">${data.crosslinks.map(cl=>`<span>↗ ${cl}</span>`).join('')}</div>`;
+  }
+  if (data.note) {
+    html += `<div class="c2-note"><strong>Level 3 note</strong>${data.note}</div>`;
+  }
+  document.getElementById('col2-items').innerHTML = html;
+}
+
+function itemRow(item) {
+  const tag = (item.type !== 'normal' && item.type !== 'crosslink' && item.type !== 'removed')
+    ? `<span class="c2-tag ${item.type}">${item.type==='new-item'?'NEW':item.type==='relabeled'?'RLB':'↑'}</span>` : '';
+  const click = (item.type !== 'removed' && item.type !== 'crosslink')
+    ? `onclick="clickItemL1('${item.label.replace(/'/g,'\\\'')}')"` : '';
+  return `<div class="c2-item ${item.type}" data-label="${item.label}" ${click}>${tag}<span class="c2-item-label">${item.label}</span></div>`;
+}
+
+function clickItemL1(label) {
+  // L1 only — individual item click
+  activeItem = label;
+  activeGroupItems = null;
+  markActive();
+  renderC3();
+}
+
+function markActive() {
+  document.querySelectorAll('.c2-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.label === activeItem);
+  });
+}
+
+function renderC3() {
+  const c3el = document.getElementById('col3');
+  if (!activeItem) {
+    c3el.innerHTML = `<div class="c3-fallback"><span style="font-size:24px;color:var(--sh-border)">→</span>Click a Column 2 item to see Column 3</div>`;
+    return;
+  }
+
+  // Look up C3 data for selected item; fall back to dept brands
+  const c3data = lookupC3(activeItem);
+  const brands = c3data?.brands || DEPT_BRANDS[dept] || [];
+  const filters = c3data?.filters || [];
+  const merch = c3data?.merch || null;
+  const products = c3data?.products || [];
+
+  // Header
+  let html = `
+    <div class="c3-top">
+      <div class="c3-context"><span>Column 3 — </span>${activeItem}</div>
+      <div class="c3-auth">
+        <span style="font-size:10px;color:var(--sh-mg);">${loggedIn?'Logged in':'Logged out'}</span>
+        <div class="auth-pill${loggedIn?' on':''}" onclick="toggleAuth()">${loggedIn?'Switch to logged out':'Switch to logged in'}</div>
+      </div>
+    </div>`;
+
+  // Brand chips
+  if (brands.length) {
+    html += `<div><div class="c3-section-label">Top Brands</div><div class="chip-row">${brands.map(b=>`<div class="brand-chip">${b}</div>`).join('')}</div></div>`;
+  }
+
+  // Filter chips
+  if (filters.length) {
+    html += `<div><div class="c3-section-label">Filter by</div><div class="chip-row">${filters.map(f=>`<div class="filter-chip">${f}</div>`).join('')}</div></div>`;
+  }
+
+  // View All CTA
+  html += `<div><a class="view-all-cta">View all ${activeItem} <span>→</span></a></div>`;
+
+  // Personal rail (logged in only)
+  if (loggedIn) {
+    html += `<div class="c3-personal">
+      <div class="c3-section-label">Recently viewed in ${activeItem}</div>
+      <div class="c3-products">`;
+    const prodList = products.length ? products : [`${activeItem} — Item 1`,`${activeItem} — Item 2`,`${activeItem} — Item 3`];
+    prodList.slice(0,3).forEach(p => {
+      html += `<div class="prod-tile">
+        <div class="prod-thumb"><div class="prod-thumb-icon">▦</div></div>
+        <div class="prod-name">${p}</div>
+        <div class="prod-price">View →</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // Merch slot (logged in, if defined)
+  if (loggedIn && merch) {
+    html += `<div class="c3-merch">
+      <div class="merch-text"><strong>Featured</strong>${merch}</div>
+      <div class="merch-cta">Shop now</div>
+    </div>`;
+  }
+
+  c3el.innerHTML = html;
+}
+
+function renderNotes() {
+  const why = CATALOG[dept].why;
+  const lk = 'l' + level;
+  const effortLabels = ['','Low — additive only','Medium — group names need validation','High — structural decisions required'];
+  const effortClasses = ['','effort-low','effort-med','effort-high'];
+  let html = `
+    <div class="notes-block">
+      <h4>WHY — ${CATALOG[dept].name} Level ${level}</h4>
+      <p>${why[lk]}</p>
+      <p>Catalog team ask: <span class="effort-badge ${effortClasses[why.effort]}">${effortLabels[why.effort]}</span></p>
+    </div>
+    <div class="notes-block">
+      <h4>Search signal</h4>
+      ${why.stats.map(([t,v])=>`<div class="stat-row"><span>${t}</span><span class="stat-v">${v}</span></div>`).join('')}
+    </div>`;
+  document.getElementById('notes-grid').innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
