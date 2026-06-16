@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigation & Mega Menu — How We'd Validate It (Two-Study Method Overview)</title>
+<link rel="stylesheet" href="https://use.typekit.net/gpz5ale.css">
+<style>
+:root{
+  --sh-dark-brown:#331811; --sh-mid-brown:#603423; --sh-tan:#B7804E;
+  --sh-light-tan-1:#F8F5F3; --sh-light-tan-2:#F0ECE8; --sh-light-tan-3:#ECDED1;
+  --sh-white:#FFFFFF; --sh-blue:#07729C;
+  --sh-off-white:#F4F4F4; --sh-black:#1E1E1E; --sh-dark-gray:#343434;
+  --sh-mid-gray:#757575; --sh-border:#DCDCDC;
+  --sh-font:'interstate','Roboto',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sh-font);color:var(--sh-dark-gray);background:var(--sh-off-white);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;}
+.page{max-width:1040px;margin:0 auto;background:var(--sh-white);}
+a{color:var(--sh-blue);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+header.masthead{background:var(--sh-dark-brown);color:var(--sh-white);padding:40px 48px 36px;}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sh-tan);margin-bottom:14px;}
+header.masthead h1{font-size:32px;font-weight:700;line-height:1.2;max-width:84%;}
+.meta{margin-top:18px;font-size:13px;color:#D9CFC8;display:flex;flex-wrap:wrap;gap:6px 28px;}
+.meta b{color:var(--sh-white);font-weight:700;}
+
+section{padding:34px 48px;border-bottom:1px solid var(--sh-border);}
+section.tinted{background:var(--sh-light-tan-1);}
+h2{font-size:24px;font-weight:700;color:var(--sh-dark-brown);line-height:1.25;margin-bottom:6px;}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sh-tan);margin-bottom:8px;}
+h3{font-size:18px;font-weight:700;color:var(--sh-dark-brown);margin:18px 0 8px;}
+p{margin-bottom:12px;}
+.lead{font-size:17px;}
+.muted{color:var(--sh-mid-gray);}
+.small{font-size:13px;}
+
+.callout{background:var(--sh-light-tan-3);border-left:4px solid var(--sh-tan);padding:16px 20px;margin-top:14px;font-size:14px;}
+.callout b{color:var(--sh-dark-brown);}
+
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13.5px;}
+th{background:var(--sh-dark-brown);color:var(--sh-white);font-size:12px;font-weight:700;letter-spacing:.04em;text-align:left;padding:10px 12px;}
+td{padding:10px 12px;border:1px solid var(--sh-border);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--sh-off-white);}
+td b{color:var(--sh-dark-brown);}
+.rowlabel{background:var(--sh-light-tan-2) !important;font-weight:700;color:var(--sh-mid-brown);width:20%;}
+
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;background:var(--sh-light-tan-3);color:var(--sh-mid-brown);}
+.pill.blue{background:var(--sh-blue);color:#fff;}
+
+.method{border:1px solid var(--sh-border);margin-top:16px;}
+.method .top{background:var(--sh-light-tan-2);padding:16px 20px;border-bottom:2px solid var(--sh-tan);}
+.method .top .tag{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sh-tan);}
+.method .top h3{margin:4px 0 0;font-size:20px;}
+.method .top .sub{font-size:13px;color:var(--sh-mid-gray);margin-top:4px;}
+.method .inner{padding:18px 22px;}
+.method .inner .block{margin-bottom:14px;}
+.method .inner .block:last-child{margin-bottom:0;}
+.method .blbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sh-blue);margin-bottom:5px;}
+.method .inner p{font-size:14px;margin-bottom:0;}
+.method .inner ul{margin:4px 0 0 18px;font-size:14px;}
+.method .inner li{margin-bottom:5px;}
+
+.tasks{background:var(--sh-light-tan-1);border:1px solid var(--sh-border);padding:14px 18px;margin-top:6px;}
+.tasks .t{padding:9px 0;border-bottom:1px dashed var(--sh-border);font-size:13.5px;}
+.tasks .t:last-child{border-bottom:none;}
+.tasks .t .scn{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--sh-tan);margin-top:4px;}
+.tasks .t .quote{font-style:italic;color:var(--sh-dark-gray);}
+
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+.box{border:1px solid var(--sh-border);padding:16px 18px;}
+.box h4{font-size:14px;font-weight:700;color:var(--sh-dark-brown);margin-bottom:8px;}
+.box ul{margin:0 0 0 18px;font-size:13.5px;}
+.box li{margin-bottom:5px;}
+
+.q{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--sh-light-tan-2);}
+.q:last-child{border-bottom:none;}
+.q .owner{flex-shrink:0;width:150px;font-size:12px;font-weight:700;color:var(--sh-mid-brown);text-transform:uppercase;letter-spacing:.03em;}
+.q .text{font-size:14px;}
+
+footer{padding:26px 48px;background:var(--sh-dark-brown);color:#D9CFC8;font-size:12.5px;}
+footer a{color:#E7DCD3;text-decoration:underline;}
+
+@media print{body{background:#fff;}.page{max-width:none;}section{break-inside:avoid;}}
+@media (max-width:720px){
+  .twocol{grid-template-columns:1fr;}
+  header.masthead,section,footer{padding-left:24px;padding-right:24px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="masthead">
+  <div class="eyebrow">SupplyHouse · UX Research · Method Overview</div>
+  <h1>How We'd Validate the Redesign — Two Lightweight Studies</h1>
+  <div class="meta">
+    <span><b>Author:</b> Andres G., UX Designer</span>
+    <span><b>For discussion with:</b> Research &amp; Manager</span>
+    <span><b>Prepared:</b> June 16, 2026</span>
+    <span><b>Companion to:</b> Goal &amp; Validation Plan (doc 28)</span>
+  </div>
+</header>
+
+<!-- INTRO -->
+<section>
+  <div class="kicker">Purpose of this doc</div>
+  <h2>What we'd run, in plain terms — so we can right-size it together</h2>
+  <p class="lead">Two complementary studies de-risk the redesign: one checks whether the <b>structure</b> (the taxonomy) makes sense, the other checks whether the <b>panel works in the hand</b>. Each answers a different question, and neither is a heavy research program.</p>
+  <div class="callout">
+    <b>Right-sized, not a deep research stage.</b> Study 1 is a remote, unmoderated test that needs no prototype and no scheduling — results come back in days. Study 2 is exactly the "put a user on the prototype and watch" session the team is comfortable with. If we only have appetite for one touch, Study 2 is the minimum — but Study 1 is cheaper and de-risks the most expensive decision (taxonomy), so doing both is the small-effort, high-coverage option.
+  </div>
+</section>
+
+<!-- AT A GLANCE -->
+<section class="tinted">
+  <div class="kicker">The two studies at a glance</div>
+  <h2>Side by side</h2>
+  <table>
+    <thead>
+      <tr><th style="width:20%;"></th><th>Study 1 — Tree Testing</th><th>Study 2 — Moderated Usability (prototype)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="rowlabel">What it is</td><td>A findability test on the bare category structure — text only, no visual design.</td><td>Watching real users attempt tasks on the interactive prototype, thinking aloud.</td></tr>
+      <tr><td class="rowlabel">What it validates</td><td>Is the taxonomy right? Can people find things? Does grouping earn its catalog cost?</td><td>Does the panel work? Click-to-open, column reveal, scope cues, Shop by Job, keyboard.</td></tr>
+      <tr><td class="rowlabel">How many users</td><td>~30–50 per structure variant, remote/unmoderated.</td><td>5–6 per segment (trade pro + homeowner) ≈ 10–12 total.</td></tr>
+      <tr><td class="rowlabel">Categories covered</td><td>The full taxonomy is in the tree; ~8–12 tasks sample across departments.</td><td>A representative subset — one large grouped menu, one small one, Shop All flow, Shop by Job.</td></tr>
+      <tr><td class="rowlabel">Prototype needed?</td><td><b>No</b> — just the category lists as text.</td><td><b>Yes</b> — the clickable prototype.</td></tr>
+      <tr><td class="rowlabel">Time per user</td><td>~10–15 min, on their own time.</td><td>~30–45 min, scheduled session.</td></tr>
+      <tr><td class="rowlabel">Output</td><td>Quant: success rate, directness, time — vs. today's structure.</td><td>Observed behavior + ease ratings; the "why" behind the numbers.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- STUDY 1 -->
+<section>
+  <div class="kicker">Study 1 · Validates structure</div>
+  <h2>Tree testing</h2>
+  <div class="method">
+    <div class="top">
+      <div class="tag">Remote · Unmoderated · No prototype</div>
+      <h3>Can people find things in the proposed structure?</h3>
+      <div class="sub">A "reverse card sort" — we give users the category tree as plain text and ask them to find where they'd go for a task.</div>
+    </div>
+    <div class="inner">
+      <div class="block"><div class="blbl">What it is</div><p>Users see only the navigation hierarchy as a clickable text outline (no colors, no layout, no panel). For each task they drill down and pick where they'd expect to find the item. Because there's no visual design to react to, it isolates one thing: does the <i>structure</i> make sense?</p></div>
+      <div class="block"><div class="blbl">What it helps prove</div><p>Whether Level 2 (grouped) genuinely helps people find products versus today's structure — and whether grouping is worth the catalog team's content work. It directly answers the taxonomy decision, which is the most expensive and least reversible part of the project.</p></div>
+      <div class="block"><div class="blbl">How many users &amp; which categories</div><p>~30–50 participants per variant. We test <b>three trees on the same tasks: current · Level 1 (reorder + add) · Level 2 (grouped)</b>. The current tree is our built-in baseline — the comparison analytics never gave us. The full department set is in each tree; the ~8–12 tasks sample high-traffic menus, the HVAC vocabulary gap, and a cross-department duplicate.</p></div>
+      <div class="block"><div class="blbl">How it's conducted</div><p>Built in a tree-testing tool (Treejack / Optimal Workshop or Lyssna), sent as a link, completed unmoderated over a few days. No moderator time, no scheduling. We segment respondents (trade pro vs. homeowner) with one screener question so we can read results by audience.</p></div>
+      <div class="block">
+        <div class="blbl">Example tasks</div>
+        <div class="tasks">
+          <div class="t"><span class="quote">"You need a circulator pump for a residential boiler. Where would you click to find it?"</span><span class="scn">Tests the Heating grouping + the "Circulators &amp; Pumps" relabel</span></div>
+          <div class="t"><span class="quote">"You're looking for a recovery machine to pull refrigerant. Where would you go?"</span><span class="scn">Tests the HVAC/Tools vocabulary gap + cross-link</span></div>
+          <div class="t"><span class="quote">"Find PVC cement and primer."</span><span class="scn">Tests the Plumbing label fix (from the old "Chemicals")</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDY 2 -->
+<section class="tinted">
+  <div class="kicker">Study 2 · Validates interaction</div>
+  <h2>Moderated usability test on the prototype</h2>
+  <div class="method">
+    <div class="top">
+      <div class="tag">Moderated · Think-aloud · On the prototype</div>
+      <h3>Does the menu actually work when someone uses it?</h3>
+      <div class="sub">The "put a user on the prototype and watch" session — exactly the hands-on test the team wants.</div>
+    </div>
+    <div class="inner">
+      <div class="block"><div class="blbl">What it is</div><p>A facilitator gives a participant realistic tasks on the clickable prototype and asks them to think aloud. We watch where they click, where they hesitate, and where they get stuck — then ask a quick ease rating after each task.</p></div>
+      <div class="block"><div class="blbl">What it helps prove</div><p>That the interaction model holds up: click-to-open (the Baymard #1 fix), the column reveal, whether users can tell where they are now that the breadcrumb is gone (the Baymard #3 / scope-cue question), and whether "Shop by Job" gets used or ignored. Tree testing can't see any of this — it needs eyes on behavior.</p></div>
+      <div class="block"><div class="blbl">How many users &amp; which categories</div><p>5–6 per segment — <b>trade pros and homeowners run separately</b>, because their mental models differ — so ~10–12 total. (Five users per group surfaces the large majority of usability issues.) We don't test all eight departments; we pick a <b>representative subset</b>: one large grouped menu (HVAC or Fittings), one small one (Valves), the Shop All open/close flow, and Shop by Job.</p></div>
+      <div class="block"><div class="blbl">How it's conducted</div><p>30–45 min sessions, in person or via screen-share. Each session opens with a quick <b>first-click task</b> (first click strongly predicts overall success), then moves to think-aloud tasks, then the ease questions. A researcher moderates; the designer observes and takes notes. We run one pilot session first to shake out the script.</p></div>
+      <div class="block">
+        <div class="blbl">Example tasks</div>
+        <div class="tasks">
+          <div class="t"><span class="quote">"Starting from the homepage, find where you'd shop for a condensate pump, then show me how you'd narrow to 230V models."</span><span class="scn">Tests Shop All open → HVAC group → Column 3 filters</span></div>
+          <div class="t"><span class="quote">"You want everything you'd need for a boiler replacement. Show me how you'd approach that."</span><span class="scn">Tests whether "Shop by Job" is discovered and used</span></div>
+          <div class="t"><span class="quote">"You realize you opened the wrong department. Get yourself to Valves instead."</span><span class="scn">Tests scope clarity + switching (the removed-breadcrumb question)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOT DOING -->
+<section>
+  <div class="kicker">Scope guardrails</div>
+  <h2>What we're deliberately <i>not</i> doing</h2>
+  <div class="twocol">
+    <div class="box">
+      <h4>Out of scope (keeps it light)</h4>
+      <ul>
+        <li>No large-scale survey or diary study</li>
+        <li>No live A/B test now — that's a post-launch monitor once tracking ships, not a gate</li>
+        <li>No full-catalog walkthrough — we sample categories, not all eight in depth</li>
+        <li>No eye-tracking or lab equipment</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Why this is enough</h4>
+      <ul>
+        <li>Tree test gives quantitative confidence on the costly taxonomy call — cheaply</li>
+        <li>Usability catches the interaction problems numbers can't explain</li>
+        <li>Together they cover both risk axes (structure + interaction) in ~2–3 weeks</li>
+        <li>Both are re-runnable post-launch as a benchmark once the menu is instrumented</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- READING RESULTS -->
+<section class="tinted">
+  <div class="kicker">How we'll read the results</div>
+  <h2>What "good" looks like</h2>
+  <table>
+    <thead>
+      <tr><th style="width:24%;">Measure</th><th style="width:24%;">From which study</th><th>What we're looking for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Task success rate</b></td><td>Tree test + usability</td><td>Higher than today's structure (tested in the same study). A common target is ~80%+ on core findability tasks.</td></tr>
+      <tr><td><b>Directness</b></td><td>Tree test</td><td>Users go straight to the right place rather than backtracking — fewer wrong turns than the current tree.</td></tr>
+      <tr><td><b>Time-to-find</b></td><td>Tree test</td><td>Faster than the current structure on the same tasks.</td></tr>
+      <tr><td><b>Single-Ease Question (SEQ)</b></td><td>Usability</td><td>Per-task ease rating trending high (e.g., ≥5.5 of 7); flags tasks that "worked" but felt hard.</td></tr>
+      <tr><td><b>Observed friction</b></td><td>Usability</td><td>Where people hesitate, misread a label, or lose their place — the "why" behind the scores.</td></tr>
+    </tbody>
+  </table>
+  <p class="small muted" style="margin-top:12px;">The headline we'll be able to report is comparative — e.g. "task success rose from N% on today's structure to N% on Level 2, with fewer wrong turns" — which is what makes a result persuasive even though the live menu was never tracked.</p>
+</section>
+
+<!-- WHAT WE NEED + SEQUENCING -->
+<section>
+  <div class="kicker">Logistics</div>
+  <h2>What we'd need, and a rough order</h2>
+  <div class="twocol">
+    <div class="box">
+      <h4>To run these we need</h4>
+      <ul>
+        <li>The category trees as text (current + Level 1 + Level 2) — already drafted in doc 18</li>
+        <li>A stable clickable prototype for the subset of menus we test</li>
+        <li>~10–12 participants for Study 2, screened into the two segments</li>
+        <li>A tree-testing tool license (Optimal Workshop / Lyssna) for Study 1</li>
+        <li>A short task script + ease questions (designer drafts, researcher refines)</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Suggested order (~2–3 weeks)</h4>
+      <ul>
+        <li><b>Week 1:</b> Tree test live (runs in the background, unmoderated)</li>
+        <li><b>Week 1–2:</b> Recruit + pilot the usability session</li>
+        <li><b>Week 2–3:</b> Run usability sessions; read tree results</li>
+        <li><b>End:</b> One combined readout — structure verdict + interaction fixes</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <b>If we can only do one:</b> start with the tree test. It's the cheapest to run, needs no prototype, and de-risks the decision that's most expensive to get wrong (the taxonomy / catalog content roadmap). Add the usability sessions when the prototype is stable.
+  </div>
+</section>
+
+<!-- OPEN QUESTIONS -->
+<section class="tinted">
+  <div class="kicker">To decide with Research &amp; Manager</div>
+  <h2>Open questions for this conversation</h2>
+  <div class="q"><div class="owner">Scope</div><div class="text">Both studies, or start with the tree test alone and add usability once the prototype is ready?</div></div>
+  <div class="q"><div class="owner">Recruiting</div><div class="text">Can we source trade pros and homeowners from existing customer lists / a panel, and is incentive budget available for the moderated sessions?</div></div>
+  <div class="q"><div class="owner">Coverage</div><div class="text">Which large menu anchors Study 2 — HVAC (vocabulary gap) or Fittings (biggest, most complex)? And do we test the Shop All + Shop by Job header concept here too?</div></div>
+  <div class="q"><div class="owner">Tooling</div><div class="text">Do we already have a tree-testing tool, or should we budget for one? Who owns moderating versus observing?</div></div>
+  <div class="q"><div class="owner">Thresholds</div><div class="text">Agree the success bar up front (e.g., ~80% task success, SEQ ≥5.5) so the readout has a clear pass/fail rather than a debate after the fact.</div></div>
+</section>
+
+<footer>
+  <div><b style="color:#fff;">SupplyHouse</b> — Navigation &amp; Mega Menu · Two-Study Method Overview · Prepared by Andres G., June 16, 2026 · For discussion with Research &amp; Manager</div>
+  <div style="margin-top:8px;">Companion docs: <a href="./28_Research-Goal-and-Validation-Plan.html">28 Goal &amp; Validation Plan</a> · <a href="./18_C7-Full-Catalog-Taxonomy.md">18 Full Catalog Taxonomy</a> · <a href="./14_C7-Desktop-Interactions.md">14 Desktop Interactions</a></div>
+</footer>
+
+</div>
+</body>
+</html>

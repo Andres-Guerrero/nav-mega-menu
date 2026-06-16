@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigation & Mega Menu — Goal, Evidence & Validation Plan</title>
+<link rel="stylesheet" href="https://use.typekit.net/gpz5ale.css">
+<style>
+:root{
+  --sh-dark-brown:#331811; --sh-mid-brown:#603423; --sh-tan:#B7804E;
+  --sh-light-tan-1:#F8F5F3; --sh-light-tan-2:#F0ECE8; --sh-light-tan-3:#ECDED1;
+  --sh-white:#FFFFFF; --sh-blue:#07729C;
+  --sh-off-white:#F4F4F4; --sh-black:#1E1E1E; --sh-dark-gray:#343434;
+  --sh-mid-gray:#757575; --sh-border:#DCDCDC;
+  --sh-font:'interstate','Roboto',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sh-font);color:var(--sh-dark-gray);background:var(--sh-off-white);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;}
+.page{max-width:1040px;margin:0 auto;background:var(--sh-white);}
+a{color:var(--sh-blue);text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ---- Header ---- */
+header.masthead{background:var(--sh-dark-brown);color:var(--sh-white);padding:40px 48px 36px;}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sh-tan);margin-bottom:14px;}
+header.masthead h1{font-size:32px;font-weight:700;line-height:1.2;max-width:80%;}
+.meta{margin-top:18px;font-size:13px;color:#D9CFC8;display:flex;flex-wrap:wrap;gap:6px 28px;}
+.meta b{color:var(--sh-white);font-weight:700;}
+
+/* ---- Section scaffolding ---- */
+section{padding:34px 48px;border-bottom:1px solid var(--sh-border);}
+section.tinted{background:var(--sh-light-tan-1);}
+h2{font-size:24px;font-weight:700;color:var(--sh-dark-brown);line-height:1.25;margin-bottom:6px;}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sh-tan);margin-bottom:8px;}
+h3{font-size:18px;font-weight:700;color:var(--sh-dark-brown);margin:18px 0 8px;}
+p{margin-bottom:12px;}
+.lead{font-size:17px;}
+.muted{color:var(--sh-mid-gray);}
+.small{font-size:13px;}
+
+/* ---- TL;DR band ---- */
+.tldr{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--sh-border);border:1px solid var(--sh-border);margin-top:6px;}
+.tldr .cell{background:var(--sh-white);padding:18px 18px;}
+.tldr .lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sh-tan);margin-bottom:6px;}
+.tldr .val{font-size:14px;line-height:1.45;color:var(--sh-dark-gray);}
+
+/* ---- Stat strip ---- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:18px;}
+.stat{border-left:3px solid var(--sh-tan);padding:4px 0 4px 14px;}
+.stat .n{font-size:26px;font-weight:700;color:var(--sh-dark-brown);line-height:1.1;}
+.stat .d{font-size:12.5px;color:var(--sh-mid-gray);margin-top:4px;line-height:1.4;}
+
+/* ---- Cards ---- */
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px;}
+.card{border:1px solid var(--sh-border);background:var(--sh-white);padding:18px 20px;}
+.card .src{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sh-blue);margin-bottom:8px;}
+.card h4{font-size:15px;font-weight:700;color:var(--sh-dark-brown);margin-bottom:6px;}
+.card ul{margin:0 0 0 18px;font-size:13.5px;line-height:1.55;}
+.card li{margin-bottom:4px;}
+.card .when{font-size:12px;color:var(--sh-mid-gray);margin-top:10px;border-top:1px solid var(--sh-light-tan-2);padding-top:8px;}
+
+/* ---- Chain ---- */
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin-top:14px;border:1px solid var(--sh-border);}
+.chain .node{flex:1;min-width:140px;padding:14px 16px;background:var(--sh-white);border-right:1px solid var(--sh-border);}
+.chain .node:last-child{border-right:none;}
+.chain .node .step{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sh-tan);margin-bottom:6px;}
+.chain .node .txt{font-size:13px;line-height:1.45;color:var(--sh-dark-gray);}
+.chain .node.goal{background:var(--sh-dark-brown);}
+.chain .node.goal .step{color:var(--sh-tan);}
+.chain .node.goal .txt{color:var(--sh-white);}
+
+/* ---- Goal hierarchy ---- */
+.goalstack{margin-top:8px;}
+.goalrow{display:flex;gap:0;border:1px solid var(--sh-border);border-bottom:none;}
+.goalstack .goalrow:last-child{border-bottom:1px solid var(--sh-border);}
+.goalrow .tier{width:170px;flex-shrink:0;background:var(--sh-light-tan-2);padding:14px 16px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--sh-mid-brown);border-right:1px solid var(--sh-border);}
+.goalrow .body{padding:14px 18px;font-size:14px;}
+.goalrow .body b{color:var(--sh-dark-brown);}
+
+/* ---- Tables ---- */
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13.5px;}
+th{background:var(--sh-dark-brown);color:var(--sh-white);font-size:12px;font-weight:700;letter-spacing:.04em;text-align:left;padding:10px 12px;}
+td{padding:10px 12px;border:1px solid var(--sh-border);vertical-align:top;}
+tbody tr:nth-child(even){background:var(--sh-off-white);}
+td b{color:var(--sh-dark-brown);}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;background:var(--sh-light-tan-3);color:var(--sh-mid-brown);}
+.pill.primary{background:var(--sh-blue);color:var(--sh-white);}
+
+/* ---- Method blocks ---- */
+.methods{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:10px;}
+.method{border:1px solid var(--sh-border);}
+.method .top{background:var(--sh-light-tan-2);padding:14px 18px;border-bottom:2px solid var(--sh-tan);}
+.method .top .tag{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--sh-tan);}
+.method .top h3{margin:4px 0 0;font-size:18px;}
+.method .top .answers{font-size:12.5px;color:var(--sh-mid-gray);margin-top:4px;}
+.method .inner{padding:14px 18px;font-size:13.5px;}
+.method .inner ul{margin:6px 0 0 18px;}
+.method .inner li{margin-bottom:5px;}
+
+/* ---- Callout ---- */
+.callout{background:var(--sh-light-tan-3);border-left:4px solid var(--sh-tan);padding:16px 20px;margin-top:14px;font-size:14px;}
+.callout b{color:var(--sh-dark-brown);}
+
+/* ---- Open questions ---- */
+.q{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--sh-light-tan-2);}
+.q:last-child{border-bottom:none;}
+.q .owner{flex-shrink:0;width:150px;font-size:12px;font-weight:700;color:var(--sh-mid-brown);text-transform:uppercase;letter-spacing:.03em;}
+.q .text{font-size:14px;}
+
+footer{padding:26px 48px;background:var(--sh-dark-brown);color:#D9CFC8;font-size:12.5px;}
+footer a{color:#E7DCD3;text-decoration:underline;}
+footer .srclist{margin-top:8px;line-height:1.8;}
+
+@media print{body{background:#fff;}.page{max-width:none;}section{break-inside:avoid;}}
+@media (max-width:720px){
+  .tldr,.stats,.cards,.methods{grid-template-columns:1fr;}
+  header.masthead,section,footer{padding-left:24px;padding-right:24px;}
+  .goalrow{flex-direction:column;}.goalrow .tier{width:100%;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="masthead">
+  <div class="eyebrow">SupplyHouse · UX Research &amp; Strategy</div>
+  <h1>Navigation &amp; Mega Menu Redesign — Goal, Evidence &amp; Validation Plan</h1>
+  <div class="meta">
+    <span><b>Author:</b> Andres G., UX Designer</span>
+    <span><b>Prepared:</b> June 16, 2026</span>
+    <span><b>Audience:</b> Design, Product/Catalog &amp; Engineering stakeholders</span>
+    <span><b>Status:</b> For review</span>
+  </div>
+</header>
+
+<!-- TL;DR -->
+<section>
+  <div class="kicker">The one-look summary</div>
+  <h2>What this is, in four lines</h2>
+  <div class="tldr">
+    <div class="cell"><div class="lbl">The problem</div><div class="val">A diagnosed findability problem in the nav — oversized, inconsistent menus, no scope cues, and hover friction — not a cosmetic refresh.</div></div>
+    <div class="cell"><div class="lbl">The goal</div><div class="val">Reduce navigation friction so users find the right category faster and more directly. Modernized look is a secondary benefit.</div></div>
+    <div class="cell"><div class="lbl">The response</div><div class="val">Concept 7 (progressive-reveal panel) + a search-aligned taxonomy staged as a Level&nbsp;1→3 roadmap. Every decision traces to evidence.</div></div>
+    <div class="cell"><div class="lbl">How we'll prove it</div><div class="val">Two studies — tree testing + moderated usability — measured against today's structure as a built-in baseline.</div></div>
+  </div>
+  <div class="callout">
+    <b>Why a goal, when the menu was never tracked?</b> The current mega menu has no interaction data — so we can't run a classic before/after on analytics. But the problem was still <i>diagnosed</i>, through expert evaluation and adjacent behavioral data. That diagnosis <i>is</i> the goal. The success baseline is created inside the validation study by testing today's structure alongside the new one.
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="tinted">
+  <div class="kicker">01 · The problem we set out to fix</div>
+  <h2>This is a findability fix, not a refresh</h2>
+  <p class="lead">Three structural problems and three high-impact usability defects were identified before any design work began. They define the goal — and they're why this is a measurable usability project, not a subjective restyle.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="src">Structural — Current-state audit</div>
+      <h4>The menu's architecture is inconsistent</h4>
+      <ul>
+        <li>Grouped vs. flat lists mixed across menus (Heating is structured; Plumbing, HVAC, Electrical, Valves, Fittings are flat)</li>
+        <li>Subcategory volume swings from ~13 (Valves) to ~42+ (Fittings) — a column sized for one looks broken for the other</li>
+        <li>Duplicate items across menus (Tools, Valves, Fittings, Pumps, Gas Cocks) with no canonical home</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="src">Usability — Baymard expert evaluation</div>
+      <h4>Three confirmed, severity-scored defects</h4>
+      <ul>
+        <li><b>Hover delay</b> — sibling menus flash open on diagonal cursor moves. Impact 2.0; observed in 100% of test users</li>
+        <li><b>No current-scope indicator</b> — users can't tell which category they're in. Impact 1.8</li>
+        <li><b>Sub-types as categories, not filters</b> — users can't compare across types. Impact 1.7</li>
+      </ul>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:16px;">Together these are a triangulated problem statement. A cosmetic refresh has none of this evidence behind it — we have named defects, severity scores, and behavioral corroboration. <a href="./01_Current-State-Audit.md">Current-State Audit</a> · <a href="./06_Baymard-Amplitude-Synthesis.md">Baymard × Amplitude Synthesis</a></p>
+</section>
+
+<!-- EVIDENCE -->
+<section>
+  <div class="kicker">02 · The evidence base — what we know &amp; how we know it</div>
+  <h2>Data available, and the methods used to get it</h2>
+  <div class="stats">
+    <div class="stat"><div class="n">58% / 42%</div><div class="d">Product-list views from search vs. category browsing — the nav competes with search</div></div>
+    <div class="stat"><div class="n">560,428</div><div class="d">Fittings Finder clicks in 90 days — the site's #1 tool, a filter-first workaround</div></div>
+    <div class="stat"><div class="n">4.5×</div><div class="d">More clicks on "Meet the Team" in the footer than Resources + Our Team in the nav</div></div>
+    <div class="stat"><div class="n">~10</div><div class="d">High-volume HVAC search terms with no clear nav path (e.g. condensate neutralizer ~5,259)</div></div>
+  </div>
+  <div class="cards" style="margin-top:22px;">
+    <div class="card">
+      <div class="src">Method · Expert evaluation</div>
+      <h4>Baymard Institute audit</h4>
+      <ul>
+        <li>5 prioritized suggestions, each with a disruptiveness impact score</li>
+        <li>Grounded in live review of SupplyHouse + 4,400+ moderated sessions</li>
+        <li>Source of the three usability defects above</li>
+      </ul>
+      <div class="when">Reviewed May 14, 2026</div>
+    </div>
+    <div class="card">
+      <div class="src">Method · Behavioral analytics</div>
+      <h4>Amplitude — SupplyHouse Prod</h4>
+      <ul>
+        <li>90-day window (Jan–May 2026), App ID 346152</li>
+        <li>Proxy paths: category page views, search terms, tool clicks, device + TM/NTM segments</li>
+        <li><b>Key limit:</b> the mega menu itself fires no events — adjacent signals only</li>
+      </ul>
+      <div class="when">Pulled &amp; synthesized May 14, 2026</div>
+    </div>
+    <div class="card">
+      <div class="src">Method · Heuristic / structural review</div>
+      <h4>Current-state audit</h4>
+      <ul>
+        <li>Inventory of every menu's structure, item counts, and duplicates</li>
+        <li>Identified the grouped-vs-flat inconsistency and volume range</li>
+      </ul>
+      <div class="when">Step 1 of the research plan</div>
+    </div>
+    <div class="card">
+      <div class="src">Method · Competitive analysis</div>
+      <h4>Ferguson · Grainger · Home Depot Pro</h4>
+      <ul>
+        <li>Benchmarked nav patterns against trade-distribution peers</li>
+        <li>Validated "Shop by Job" (Ferguson) and keeping top categories visible</li>
+      </ul>
+      <div class="when"><a href="./05_Competitive-Analysis.md">05_Competitive-Analysis.md</a></div>
+    </div>
+  </div>
+  <div class="callout">
+    <b>The honest gap:</b> the mega menu was never instrumented, so we have no direct interaction data for it. Everything above is expert + adjacent behavioral evidence. Instrumenting the new menu (a defined event schema) ships <i>with</i> the redesign — so the next iteration finally has its own data.
+  </div>
+</section>
+
+<!-- GOAL -->
+<section class="tinted">
+  <div class="kicker">03 · The goal that drove the design</div>
+  <h2>One goal, three levels — so every decision has a "why"</h2>
+  <div class="goalstack">
+    <div class="goalrow">
+      <div class="tier">Business goal</div>
+      <div class="body"><b>Make browsing a reliable path to purchase.</b> Reduce reliance on search-as-rescue and lost demand (e.g. HVAC terms with no nav home), so more sessions convert through the catalog.</div>
+    </div>
+    <div class="goalrow">
+      <div class="tier">Experience goal</div>
+      <div class="body"><b>Reduce the findability friction the audit diagnosed.</b> Users should locate the right category faster, more directly, and with clear sense of where they are — across both trade-pro and homeowner mental models.</div>
+    </div>
+    <div class="goalrow">
+      <div class="tier">Design principles</div>
+      <div class="body"><b>The rules each proposal had to satisfy:</b> (1) reduce scanning cost in large menus, (2) make current scope always visible, (3) remove timing/hover friction, (4) speak the user's vocabulary, (5) let high-intent users filter, not drill.</div>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:16px;">Read top-to-bottom this is the rationale chain: the business reason → the experience outcome → the concrete rules that generated the designs in Section 05.</p>
+</section>
+
+<!-- HEART / GSM -->
+<section>
+  <div class="kicker">04 · Goals → Signals → Metrics (HEART)</div>
+  <h2>How success is defined without a historical baseline</h2>
+  <p>We use the Google HEART / Goals-Signals-Metrics model because it forces the goal first, then asks what would prove it. The primary category — <b>Task Success</b> — needs no analytics history at all: it's generated inside the study, against today's structure as the comparison.</p>
+  <table>
+    <thead>
+      <tr><th style="width:14%;">HEART</th><th style="width:24%;">Goal</th><th style="width:24%;">Signal</th><th style="width:24%;">Metric</th><th style="width:14%;">Measured in</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>Task Success</b> <span class="pill primary">Primary</span></td>
+        <td>Users find the right category quickly and directly</td>
+        <td>Fewer wrong turns and backtracks; faster correct selection</td>
+        <td>Task success rate · directness · time-to-task</td>
+        <td>Tree test + usability (vs. current-state arm)</td>
+      </tr>
+      <tr>
+        <td><b>Happiness</b></td>
+        <td>Users feel confident about where they are and where to go</td>
+        <td>Higher perceived ease; less hesitation/confusion</td>
+        <td>Single-Ease Question (per task) · SUS (overall)</td>
+        <td>Moderated usability sessions</td>
+      </tr>
+      <tr>
+        <td><b>Engagement</b> <span class="pill">Post-launch</span></td>
+        <td>The menu becomes a real discovery path, not a fallback to search</td>
+        <td>Menu opens lead into category → product → cart; search-as-rescue drops</td>
+        <td>Menu open rate · reveal depth · search-as-fallback rate · category→PDP funnel</td>
+        <td>New event tracking, after launch</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>The headline we'll be able to report</b> isn't "X% engagement" (no before exists) — it's <i>"task success rose from N% on today's structure to N% on the new one, with fewer recovery clicks."</i> That comparison is manufactured inside the study, which is exactly what solves the no-baseline problem.
+  </div>
+</section>
+
+<!-- DESIGN + RATIONALE -->
+<section class="tinted">
+  <div class="kicker">05 · The design response &amp; its rationale</div>
+  <h2>What we proposed — and the evidence behind each move</h2>
+  <p><b>Direction:</b> Concept 7, a progressive-reveal panel (orient → narrow → select), was advanced as the primary direction. <b>Taxonomy:</b> the menu structure is framed as a three-level roadmap by amount of catalog work — <b>Level 1</b> (reorder + add missing high-search items, fix labels), <b>Level 2</b> (named groupings where lists are long or mixed), <b>Level 3</b> (resolve cross-department duplicates and canonical homes). The current prototype renders the Level 2 grouped target with an adaptive column layout. <b>Nav bar (a complementary proposal):</b> the mega menu is the primary scope, but introducing <i>Shop All</i> as its entry point naturally opens the door to a leaner header. Header <b>Option 2</b> reduces the bar to two entry points — <i>Shop All</i> (browse by department) and <i>Shop by Job</i> — with every department living inside the Shop All panel. It's a secondary idea, included here because it follows the direction larger e-commerce and trade-distribution sites are already taking with a consolidated "Shop All" entry. Full detail in the linked docs; the table below is the traceability — each decision answers to a piece of evidence.</p>
+  <table>
+    <thead>
+      <tr><th style="width:34%;">Design decision</th><th style="width:40%;">Evidence / principle it serves</th><th style="width:26%;">Source</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>Click-to-open panel</b> (no hover trigger)</td><td>Eliminates the hover-delay defect — the #1 Baymard finding, seen in 100% of test users</td><td>Baymard #1 (impact 2.0)</td></tr>
+      <tr><td><b>Header Option 2</b> — Shop All + Shop by Job only <span class="pill">Complementary</span></td><td>Reduces the bar to two entry modes — Shop All (browse by department) and Shop by Job — with every department living inside the Shop All panel. A clean, consolidated entry, enabled by Shop All and aligned with the industry move toward a single entry point</td><td>Competitive analysis + Concept 7</td></tr>
+      <tr><td><b>Persistent active-state highlighting</b> (highlighted dept + active subcategory)</td><td>Keeps the user's place visible inside the panel — matters because 58% arrive via search with no nav context. (Replaces the earlier breadcrumb concept, now removed — see open questions.)</td><td>Baymard #3</td></tr>
+      <tr><td><b>Adaptive grouped layout</b> (Level 1→3 roadmap)</td><td>Fixes the 13–42 item swing and grouped-vs-flat inconsistency; staged so catalog work can land in phases</td><td>Current-state audit</td></tr>
+      <tr><td><b>Search-aligned groupings &amp; added items</b> (Level 1–2)</td><td>Closes the HVAC vocab gap — adds high-search terms (condensate neutralizers, float switches, etc.) that have no nav path today</td><td>Amplitude search analysis</td></tr>
+      <tr><td><b>Filter-first entry to Fittings</b></td><td>Matches how users actually behave — the Fittings Finder is the #1 tool at 560K clicks</td><td>Amplitude tool clicks</td></tr>
+      <tr><td><b>Resources / Our Team moved to footer</b></td><td>Footer "Meet the Team" already gets 4.5× the clicks — the nav slots were low-value</td><td>Amplitude nav vs. footer</td></tr>
+      <tr><td><b>Tracking spec ships with redesign</b></td><td>The menu has zero events today; instrument from scratch so the next iteration has real data</td><td>Amplitude (uninstrumented)</td></tr>
+    </tbody>
+  </table>
+  <p class="small muted" style="margin-top:14px;">Detail &amp; mockups: <a href="./18_C7-Full-Catalog-Taxonomy.md">Full catalog taxonomy (Levels 1–3)</a> · <a href="./17_C7-Content-Layer.md">HVAC &amp; Heating depth</a> · <a href="./11_C7-Nav-Bar-Layout.md">Nav-bar layout</a> · <a href="./14_C7-Desktop-Interactions.md">Desktop panel interactions</a></p>
+</section>
+
+<!-- VALIDATION PLAN -->
+<section>
+  <div class="kicker">06 · How we'll validate — two studies</div>
+  <h2>The lightweight plan: structure, then interaction</h2>
+  <p>The two big unknowns are different in kind, so each gets the method that fits it. Together they cover both risk axes without a heavy research program. The live A/B test is deferred to post-launch monitoring — it needs the build plus tracking and isn't a gate.</p>
+  <div class="methods">
+    <div class="method">
+      <div class="top">
+        <div class="tag">Study 1 · Validates structure</div>
+        <h3>Tree testing</h3>
+        <div class="answers">Answers: is the taxonomy right? Is B worth its cost over C?</div>
+      </div>
+      <div class="inner">
+        <p>UI-free findability test of the bare category hierarchy. Fast, remote, quantitative — the single highest-leverage study, because the taxonomy choice is the most expensive and least reversible decision.</p>
+        <ul>
+          <li>Test <b>three trees: current · Level 1 (reorder + add) · Level 2 (grouped)</b> on the same tasks — does grouping earn its catalog cost?</li>
+          <li>The current tree <b>is your synthetic baseline</b> — the before/after analytics never captured</li>
+          <li>Metrics: success rate, directness, time</li>
+          <li>Tools: Treejack / Optimal Workshop or Lyssna</li>
+        </ul>
+      </div>
+    </div>
+    <div class="method">
+      <div class="top">
+        <div class="tag">Study 2 · Validates interaction</div>
+        <h3>Moderated usability test</h3>
+        <div class="answers">Answers: does the panel work in the hand? Per segment?</div>
+      </div>
+      <div class="inner">
+        <p>Behavioral observation on the prototype — the only way to test click-to-open, column reveal, scope highlighting, and the keyboard path. Also reveals whether "Shop by Job" gets used or routed around.</p>
+        <ul>
+          <li>5–8 sessions <b>per segment — trade pros and homeowners run separately</b> (their mental models diverge)</li>
+          <li>Open each session with a <b>first-click task</b> so that signal isn't lost</li>
+          <li>Metrics: SEQ per task, SUS overall, observed success/recovery</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="callout">
+    <b>If forced down to one:</b> tree testing. Getting the taxonomy wrong is the costliest mistake — it drives the catalog team's content roadmap — so it's the decision most worth de-risking before build.
+  </div>
+</section>
+
+<!-- OPEN QUESTIONS -->
+<section class="tinted">
+  <div class="kicker">07 · Open questions for stakeholders</div>
+  <h2>Decisions this plan needs from the room</h2>
+  <div class="q"><div class="owner">Product / Catalog</div><div class="text">Approve the Level 1→3 taxonomy roadmap and commit to the staged catalog content work. Confirm the Level 1 additions + Level 2 groupings close the HVAC vocabulary gap, or flag where more depth is needed.</div></div>
+  <div class="q"><div class="owner">Design / Kristine</div><div class="text">Confirm Header Option 2 — a nav bar of just Shop All + Shop by Job, with all departments inside the panel. Trade-off to weigh: a cleaner, consolidated header versus losing the always-visible category spine that repeat and new-to-market users rely on today.</div></div>
+  <div class="q"><div class="owner">Design / Research</div><div class="text">With the in-panel breadcrumb removed, confirm how the current-scope cue (Baymard #3) is delivered — is persistent active-state highlighting sufficient, or is a lightweight scope label still needed? Worth an explicit task in the usability test.</div></div>
+  <div class="q"><div class="owner">Research / All</div><div class="text">Confirm task success + directness as the primary success metric, and agree to test today's structure as the baseline arm in the tree test.</div></div>
+  <div class="q"><div class="owner">Engineering</div><div class="text">Commit to shipping the mega-menu event schema with the redesign, so the post-launch Engagement metrics in Section 04 are actually measurable.</div></div>
+  <div class="q"><div class="owner">Scope</div><div class="text">Run both studies, or start with tree testing alone given appetite for a lightweight research stage?</div></div>
+</section>
+
+<footer>
+  <div><b style="color:#fff;">SupplyHouse</b> — Navigation &amp; Mega Menu Redesign · UX Research &amp; Strategy · Prepared by Andres G., June 16, 2026 · For internal review</div>
+  <div class="srclist">
+    Sources &amp; detail:
+    <a href="./01_Current-State-Audit.md">01 Current-State Audit</a> ·
+    <a href="./03_Amplitude-Findings.md">03 Amplitude Findings</a> ·
+    <a href="./05_Competitive-Analysis.md">05 Competitive Analysis</a> ·
+    <a href="./06_Baymard-Amplitude-Synthesis.md">06 Baymard × Amplitude Synthesis</a> ·
+    <a href="./10_Taxonomy-Proposals.md">10 Taxonomy Proposals (A/B/C structural)</a> ·
+    <a href="./11_C7-Nav-Bar-Layout.md">11 Nav-Bar Layout</a> ·
+    <a href="./14_C7-Desktop-Interactions.md">14 Desktop Interactions</a> ·
+    <a href="./17_C7-Content-Layer.md">17 Content Layer</a> ·
+    <a href="./18_C7-Full-Catalog-Taxonomy.md">18 Full Catalog Taxonomy (Levels 1–3)</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
