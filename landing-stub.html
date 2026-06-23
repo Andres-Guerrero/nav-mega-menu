@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Results — SupplyHouse prototype</title>
+<style>
+  :root{
+    --sh-blue:#07729C; --sh-dark-brown:#331811; --sh-tan:#B7804E;
+    --ink:#343434; --gray:#757575; --border:#DCDCDC; --wire:#ECECEC; --wire2:#F4F4F4;
+    --font:'Maison Neue','Helvetica Neue',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);color:var(--ink);background:#fff;}
+  /* header strip — light echo of the real site so the arrival reads as real */
+  .topbar{display:flex;align-items:center;gap:20px;max-width:1120px;margin:0 auto;padding:14px 28px;border-bottom:1px solid var(--border);}
+  .topbar img{height:30px;}
+  .topbar .search{flex:1;max-width:560px;height:38px;border:1px solid var(--border);background:var(--wire2);}
+  .topbar .util{margin-left:auto;display:flex;gap:18px;}
+  .topbar .util span{width:22px;height:22px;background:var(--wire);border-radius:2px;}
+  /* body */
+  .wrap{max-width:1120px;margin:0 auto;padding:22px 28px 60px;}
+  .crumb{font-size:13px;color:var(--gray);margin-bottom:14px;}
+  .crumb b{color:var(--ink);font-weight:700;}
+  h1{font-size:26px;font-weight:700;color:var(--sh-dark-brown);margin-bottom:6px;}
+  .sub{font-size:14px;color:var(--gray);margin-bottom:22px;}
+  .stub-note{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--sh-tan);border:1px solid var(--sh-tan);padding:3px 9px;margin-bottom:20px;}
+  .layout{display:grid;grid-template-columns:220px 1fr;gap:28px;}
+  /* faux filter rail (greyed, non-functional on purpose) */
+  .rail .rail-h{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gray);margin:0 0 10px;}
+  .rail .bar{height:12px;background:var(--wire);margin-bottom:10px;}
+  .rail .bar.s{width:70%;} .rail .bar.m{width:90%;}
+  /* faux product grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .card{border:1px solid var(--border);padding:14px;}
+  .card .img{height:120px;background:var(--wire);margin-bottom:12px;}
+  .card .l1{height:11px;background:var(--wire);width:85%;margin-bottom:7px;}
+  .card .l2{height:11px;background:var(--wire);width:60%;margin-bottom:14px;}
+  .card .price{height:16px;background:var(--wire);width:40%;}
+  .back{display:inline-flex;align-items:center;gap:8px;margin-top:6px;margin-bottom:26px;
+    background:var(--sh-blue);color:#fff;border:none;font-family:var(--font);font-size:14px;font-weight:700;
+    padding:11px 20px;cursor:pointer;}
+  .back:hover{background:#055d80;}
+  @media(max-width:720px){ .layout{grid-template-columns:1fr;} .grid{grid-template-columns:repeat(2,1fr);} .rail{display:none;} }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <img src="sh-logo.svg" alt="SupplyHouse">
+    <div class="search"></div>
+    <div class="util"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="wrap">
+    <button class="back" onclick="history.back()">&larr;&nbsp; Back to the menu</button>
+
+    <div class="crumb">Home &rsaquo; <b id="crumb-cat">Category</b></div>
+    <h1 id="cat-title">Category</h1>
+    <div class="sub" id="cat-sub">Product results would load here.</div>
+    <div class="stub-note">Results placeholder &middot; not part of this test</div>
+
+    <div class="layout">
+      <aside class="rail">
+        <div class="rail-h">Filter</div>
+        <div class="bar m"></div><div class="bar s"></div><div class="bar"></div>
+        <div class="bar s"></div><div class="bar m"></div><div class="bar"></div>
+      </aside>
+      <section class="grid" id="grid"></section>
+    </div>
+  </div>
+
+<script>
+  // Read the category the participant clicked from ?cat=
+  var params = new URLSearchParams(window.location.search);
+  var cat = (params.get('cat') || 'Category').trim();
+  document.getElementById('cat-title').textContent = cat;
+  document.getElementById('crumb-cat').textContent = cat;
+  document.getElementById('cat-sub').textContent = 'You’d land on the results page for “' + cat + '”.';
+  document.title = cat + ' — SupplyHouse prototype';
+  // Wireframe product placeholders (no real products by design)
+  var grid = document.getElementById('grid');
+  for (var i=0;i<6;i++){
+    grid.insertAdjacentHTML('beforeend',
+      '<div class="card"><div class="img"></div><div class="l1"></div><div class="l2"></div><div class="price"></div></div>');
+  }
+</script>
+</body>
+</html>
