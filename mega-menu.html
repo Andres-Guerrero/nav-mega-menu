@@ -52,7 +52,9 @@ a{text-decoration:none;color:inherit;}
 
 /* ── PROTOTYPE BAR ── */
 /* Prototype controls — floating bar pinned to bottom-center */
-.proto-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--sh-border);border-radius:10px;box-shadow:0 6px 26px rgba(0,0,0,.20);padding:8px 14px;display:flex;align-items:center;gap:12px;z-index:9998;max-width:calc(100vw - 24px);flex-wrap:wrap;}
+.proto-bar{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid var(--sh-border);border-radius:10px;box-shadow:0 6px 26px rgba(0,0,0,.20);padding:8px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:9998;max-width:calc(100vw - 24px);}
+.proto-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;}
+.proto-row-hdr{justify-content:flex-start;width:100%;}
 .proto-label{font-size:10.5px;font-weight:700;color:var(--sh-mg);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;}
 .proto-tg{display:flex;}
 .pt{font-size:12px;font-weight:700;padding:5px 12px;background:var(--sh-lt1);color:var(--sh-dg);border:1px solid var(--sh-border);cursor:pointer;transition:all .15s;margin-left:-1px;position:relative;}
@@ -286,7 +288,7 @@ a{text-decoration:none;color:inherit;}
 .page-hero-sub{font-size:15px;color:rgba(255,255,255,.66);max-width:520px;margin:0 auto 22px;}
 .hero-btn{display:inline-flex;align-items:center;gap:8px;background:var(--sh-tan);color:white;font-size:14px;font-weight:700;padding:12px 26px;cursor:pointer;font-family:var(--font);border:none;transition:background .15s;}
 .hero-btn:hover{background:var(--sh-mid-brown);}
-.page-body{padding:36px max(28px, calc((100% - 1920px) / 2));}
+.page-body{display:none;} /* category grid under banner hidden (decided: distracting for the test). Restore: padding:36px max(28px, calc((100% - 1920px) / 2)); */
 .page-sec-title{font-size:20px;font-weight:700;color:var(--sh-dark-brown);margin-bottom:20px;text-align:center;}
 .cat-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;}
 .cat-card{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 8px;cursor:pointer;text-decoration:none;}
@@ -361,6 +363,7 @@ a{text-decoration:none;color:inherit;}
 }
 @media (max-width:640px){
   .util-bar{display:none;}
+  .home-banner{aspect-ratio:1300 / 650;}
   .main-header{height:auto;min-height:56px;padding:8px 12px;gap:10px;flex-wrap:wrap;}
   .h-hamburger{display:flex;}
   .header-logo{gap:6px;}
@@ -379,27 +382,54 @@ a{text-decoration:none;color:inherit;}
   .c3-prod-grid .prod-card:nth-child(n+5){display:none;}  /* show 4 */
   .cat-grid{grid-template-columns:repeat(2,1fr);}
 }
+/* ── Mobile preview overlay ── */
+.mpv-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;}
+.mpv-overlay.open{display:flex;}
+.mpv-frame{display:flex;flex-direction:column;align-items:center;gap:12px;}
+.mpv-bar{display:flex;align-items:center;gap:16px;color:#fff;}
+.mpv-title{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.mpv-close{background:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--sh-dark-brown);cursor:pointer;}
+.mpv-device{width:390px;height:min(844px,80vh);background:#111;border-radius:38px;padding:12px;box-shadow:0 24px 70px rgba(0,0,0,.55);}
+.mpv-iframe{width:100%;height:100%;border:0;border-radius:28px;background:#fff;}
 </style>
 </head>
 <body>
 
 <!-- PROTO BAR -->
 <div class="proto-bar">
-  <span class="proto-label">Prototype</span>
-  <div class="proto-tg" id="lbtns">
-    <button class="pt active" onclick="setLevel(1)">Level 1 — Reorder</button>
-    <button class="pt" onclick="setLevel(2)">Level 2 — Groupings ★</button>
-    <button class="pt" onclick="setLevel(3)">Level 3 — Structural</button>
+  <div class="proto-row">
+    <span class="proto-label">Prototype</span>
+    <div class="proto-tg" id="lbtns">
+      <button class="pt active" onclick="setLevel(1)">Level 1 — Reorder</button>
+      <button class="pt" onclick="setLevel(2)">Level 2 — Groupings ★</button>
+      <button class="pt" onclick="setLevel(3)">Level 3 — Structural</button>
+    </div>
+    <div class="pdiv"></div>
+    <div class="proto-tg"><button class="pt active" id="auth-btn" onclick="toggleAuth()">● Logged In</button></div>
+    <div class="pdiv"></div>
+    <div class="proto-tg"><button class="pt" id="mobile-btn" onclick="openMobilePreview()">📱 Mobile preview</button></div>
   </div>
-  <div class="pdiv"></div>
-  <div class="proto-tg"><button class="pt active" id="auth-btn" onclick="toggleAuth()">● Logged In</button></div>
-  <div class="pdiv"></div>
-  <span class="proto-label">Header</span>
-  <div class="proto-tg" id="hbtns">
-    <button class="pt active" onclick="setHeader('current')">Header: Current</button>
-    <button class="pt" onclick="setHeader('proposal')">Header: Proposal</button>
+  <div class="proto-row proto-row-hdr">
+    <span class="proto-label">Header</span>
+    <div class="proto-tg" id="hbtns">
+      <button class="pt active" onclick="setHeader('current')">Header: Current</button>
+      <button class="pt" onclick="setHeader('proposal')">Header: Proposal</button>
+    </div>
+    <span class="phint"><strong>Hover</strong> nav category to open · <strong>Click</strong> subcategory to navigate</span>
   </div>
-  <span class="phint"><strong>Hover</strong> nav category to open · <strong>Click</strong> subcategory to navigate</span>
+</div>
+
+<!-- MOBILE PREVIEW OVERLAY -->
+<div class="mpv-overlay" id="mpv-overlay" onclick="closeMobilePreview()">
+  <div class="mpv-frame" onclick="event.stopPropagation()">
+    <div class="mpv-bar">
+      <span class="mpv-title">📱 Mobile preview</span>
+      <button class="mpv-close" onclick="closeMobilePreview()">✕ Close</button>
+    </div>
+    <div class="mpv-device">
+      <iframe class="mpv-iframe" id="mpv-iframe" title="Mobile preview" src="about:blank"></iframe>
+    </div>
+  </div>
 </div>
 
 <!-- UTILITY BAR -->
@@ -1135,6 +1165,8 @@ function showToast(msg){
 var mnavDept=null;
 function openMobileNav(){document.getElementById('mnav').classList.add('open');document.getElementById('mnav-overlay').classList.add('open');mnavDept=null;renderMobileNav();}
 function closeMobileNav(){document.getElementById('mnav').classList.remove('open');document.getElementById('mnav-overlay').classList.remove('open');}
+function openMobilePreview(){var f=document.getElementById('mpv-iframe');f.src='mega-menu.html?controls=hide&level='+level;document.getElementById('mpv-overlay').classList.add('open');}
+function closeMobilePreview(){document.getElementById('mpv-overlay').classList.remove('open');document.getElementById('mpv-iframe').src='about:blank';}
 function mobileBack(){mnavDept=null;renderMobileNav();}
 function mobileDrill(id){mnavDept=id;renderMobileNav();}
 function renderMobileNav(){
@@ -1143,14 +1175,14 @@ function renderMobileNav(){
   var back=document.getElementById('mnav-back');
   if(!mnavDept){
     back.style.display='none'; title.textContent='Shop All';
-    var rows='<div class="mnav-row mnav-job" onclick="showToast(\'Shop by Job (prototype)\');closeMobileNav();"><span>Shop by Job</span><span class="chev">&rsaquo;</span></div>';
-    rows+=DEPTS.map(function(d){return '<div class="mnav-row" onclick="mobileDrill(\''+d.id+'\')"><span>'+d.label+'</span><span class="chev">&rsaquo;</span></div>';}).join('');
+    var rows='<div class="mnav-row mnav-job" onclick="showToast(\'Shop by Job (prototype)\');closeMobileNav();"><span>Shop by Job</span><span class="chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block"><polyline points="9 18 15 12 9 6"/></svg></span></div>';
+    rows+=DEPTS.map(function(d){return '<div class="mnav-row" onclick="mobileDrill(\''+d.id+'\')"><span>'+d.label+'</span><span class="chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block"><polyline points="9 18 15 12 9 6"/></svg></span></div>';}).join('');
     body.innerHTML=rows; body.scrollTop=0;
   } else {
     var dept=DEPTS.find(function(x){return x.id===mnavDept;});
     back.style.display='inline-flex'; title.textContent=dept?dept.label:'';
-    var items=(TAX[mnavDept]&&(TAX[mnavDept][2]||TAX[mnavDept][1]))||[];
-    var rows='<div class="mnav-row mnav-viewall" onclick="showToast(\'View All \'+ (\''+(dept?dept.label:'')+'\'));closeMobileNav();"><span>View All '+(dept?dept.label:'')+'</span><span class="chev">&rsaquo;</span></div>';
+    var items=(TAX[mnavDept]&&(TAX[mnavDept][level]||TAX[mnavDept][1]))||[];
+    var rows='<div class="mnav-row mnav-viewall" onclick="showToast(\'View All \'+ (\''+(dept?dept.label:'')+'\'));closeMobileNav();"><span>View All '+(dept?dept.label:'')+'</span><span class="chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block"><polyline points="9 18 15 12 9 6"/></svg></span></div>';
     rows+=items.map(function(it){
       if(it.grp) return '<div class="mnav-grp">'+it.grp+'</div>';
       return '<div class="mnav-row mnav-leaf" onclick="showToast(\'Navigate (prototype)\');closeMobileNav();"><span>'+it.lbl+'</span></div>';
@@ -1281,6 +1313,7 @@ function setLevel(l){
   level=l;
   document.querySelectorAll('#lbtns .pt').forEach(function(b,i){b.classList.toggle('active',(i+1)===l);});
   if(panelOpen&&activeDept){renderCol2(activeDept);if(previewSub) renderCol3(activeDept,previewSub);}
+  var mn=document.getElementById('mnav');if(mn&&mn.classList.contains('open'))renderMobileNav();
 }
 
 // ── REPOSITION PANEL ON SCROLL/RESIZE ──
